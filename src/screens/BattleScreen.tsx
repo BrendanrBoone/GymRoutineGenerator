@@ -33,34 +33,35 @@ export default function BattleScreen(props: IBattleScreenProps) {
     //provides player information
     const ctx = useAppContext();
 
-    //visibility of win screen
-    const [winDow_visibility, setWinDow_visibility] = useState(false);
-
-    //usability of player buttons
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [winDow_visibility, setWinDow_visibility] = useState(false); //visibility of win screen
+    const [buttonDisabled, setButtonDisabled] = useState(false); //usability of player buttons
+    const [videoPlaying, setVideoPlaying] = useState(false);
 
     //it is setup so a random video from this list is played after a game
-    const ending_videos: [NodeRequire, NodeRequire][] = [
+    const ending_videos: [string, string][] = [
         [
-            require("../assets/videos_mp4/exodia_obliterate.mp4"),
-            require("../assets/videos_mp4/exodia_obliterate_upsidedown.mp4")
+            require("../assets/videos_mp4/exodia_obliterate.mp4") as string,
+            require("../assets/videos_mp4/exodia_obliterate_upsidedown.mp4") as string
         ]
     ];
-    const random_ending: [NodeRequire, NodeRequire] = ending_videos[Math.floor(Math.random() * ending_videos.length)];
+    const random_ending: [string, string] = ending_videos[Math.floor(Math.random() * ending_videos.length)];
 
     //constantly checks if a player has won
     useEffect(() => {
-        if (!winDow_visibility && (ctx.player1.countLP === 0 || ctx.player2.countLP === 0)) {
-            setButtonDisabled(!buttonDisabled);
-            setTimeout(() => {
-                console.log("delayed action!");
-                setWinDow_visibility(true);
-            }, 2000);
-        }
-    }, [ctx.player1.countLP, ctx.player2.countLP, winDow_visibility])
+    if (!winDow_visibility && (ctx.player1.countLP === 0 || ctx.player2.countLP === 0)) {
+        setButtonDisabled(true);
+        setTimeout(() => {
+        console.log("delayed action!");
+        setWinDow_visibility(true);
+        setVideoPlaying(true);  // start video playback when modal opens
+        }, 2000);
+    }
+    }, [ctx.player1.countLP, ctx.player2.countLP, winDow_visibility]);
 
     //navigates back to home screen
     const handleGameEnd = (): void => {
+        setVideoPlaying(false);
+        setWinDow_visibility(false);
         functionLibrary.printLogScreen(route_names.BATTLE_SCREEN);
         props.navigation.navigate(route_names.HOME_SCREEN);
     }
@@ -115,7 +116,7 @@ export default function BattleScreen(props: IBattleScreenProps) {
                 <View style={ctx.player1.countLP == 0 ? styles.win_dow_flipped : styles.win_dow}>
                     <VideoPlayer
                         onEnd={handleGameEnd}
-                        source_location={ctx.player1.countLP == 0 ? random_ending[1] : random_ending[0]} />
+                        source_location={ctx.player1.countLP == 0 ? random_ending[1] : random_ending[0]}/>
                     <View style={{flexDirection: "row", justifyContent: "center"}}>
                         <Text style={{fontSize: 50}}>
                             YOU WIN

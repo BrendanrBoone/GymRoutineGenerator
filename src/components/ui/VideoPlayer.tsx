@@ -1,56 +1,30 @@
-/**
- * VideoPlayer.tsx
- *
- * Video module that uses expo-av and supports local video files via require()
- */
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
-import { Asset } from 'expo-asset';
+import { useEventListener } from 'expo';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 interface VideoPlayerProps {
   onEnd: () => void;
-  source_location: number; // because require() returns a number
+  source_location: string;
 }
 
-/**
- * Untouchable video that runs a function when video ends
- */
 export function VideoPlayer({ onEnd, source_location }: VideoPlayerProps) {
-  const videoRef = useRef<Video>(null);
-  const [videoUri, setVideoUri] = useState<string | null>(null);
+  const player = useVideoPlayer(source_location, player => {
+    player.loop = false;
+    player.play()
+  });
 
-  useEffect(() => {
-    const loadAsset = async () => {
-      const asset = Asset.fromModule(source_location);
-      await asset.downloadAsync(); // optional for local assets
-      setVideoUri(asset.localUri || asset.uri);
-    };
-
-    loadAsset();
-  }, [source_location]);
-
-  if (!videoUri) {
-    return null; // or show a loading spinner
-  }
+  useEventListener(player, 'playToEnd', () => {
+    onEnd();
+  })
 
   return (
     <View>
-      <Video
-        ref={videoRef}
-        source={{ uri: videoUri }}
+      <VideoView
         style={{ width: '100%', height: 300 }}
-        useNativeControls={false}
-        resizeMode={ResizeMode.CONTAIN}
-        isMuted={false}
-        shouldPlay
-        onPlaybackStatusUpdate={(status) => {
-          if (!status.isLoaded) return;
-          if (status.didJustFinish) {
-            onEnd();
-          }
-        }}
+        player={player}
+        nativeControls={false}
+        contentFit="contain"
       />
     </View>
   );

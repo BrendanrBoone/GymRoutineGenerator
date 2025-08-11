@@ -1,5 +1,8 @@
 # GymRoutineGenerator
+
 I want my own app to generate my various routines at the gym
 
 ### Notes
-> merging files with the terminal was more of a struggle than I thought
+
+> the issue is it plays two on start.
+> then closing one opens another idk why yet
