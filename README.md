@@ -4,7 +4,7 @@ I want my own app to generate my various routines at the gym
 
 ### Notes
 
-> Seems good on the yugioh app fix. might port it to the yugioh app
+> Seems good on the yugioh app fix. might port it to the yugioh app: WILL NOT
 > maybe make a optional backend feature so the user can customize/remember what weight and number of sets they use
 
 ### To do
