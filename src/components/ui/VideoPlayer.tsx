@@ -11,7 +11,7 @@ interface VideoPlayerProps {
 export function VideoPlayer({ onEnd, source_location }: VideoPlayerProps) {
   const player = useVideoPlayer(source_location, player => {
     player.loop = false;
-    player.play()
+    player.play();
   });
 
   useEventListener(player, 'playToEnd', () => {
