@@ -59,11 +59,8 @@ export default function BattleScreen(props: IBattleScreenProps) {
     //navigates back to home screen
     const handleGameEnd = (): void => {
         setWinDow_visibility(false);
-        setTimeout(() => {
-            console.log("delayed action! close");
-            functionLibrary.printLogScreen(route_names.BATTLE_SCREEN);
-            props.navigation.navigate(route_names.HOME_SCREEN);
-        }, 2000);
+        functionLibrary.printLogScreen(route_names.BATTLE_SCREEN);
+        props.navigation.navigate(route_names.HOME_SCREEN);
     };
 
     //navigates to calculation screen
