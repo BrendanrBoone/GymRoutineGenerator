@@ -3,7 +3,7 @@
  * 
  * Home Screen component.
  */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     StyleSheet,
     View,
@@ -60,18 +60,17 @@ export default function HomeScreen(props: IHomeScreenProps) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{alignSelf: 'center', marginTop: 0}}>
-                <ArrowSelector itemLst={defined_starting_LP} currentLP={handleCurrentLP} />
-            </View>
-            
             <View style={styles.duelView}>
                 <DemoButton 
-                key="Start Battle" 
+                key="big generate routines button" 
                 onPress={duelButtonFunction}
                 color={defined_colors.dark_grey}
                 color_pressed={defined_colors.black}>
-                    {"DUEL!"}
+                    {"GENERATE!"}
                 </DemoButton>
+            </View>
+            <View style={{alignSelf: 'center', marginTop: 0}}>
+                <ArrowSelector itemLst={defined_starting_LP} currentLP={handleCurrentLP} />
             </View>
         </SafeAreaView>
     );
