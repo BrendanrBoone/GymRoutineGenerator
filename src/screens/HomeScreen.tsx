@@ -66,8 +66,6 @@ export default function HomeScreen(props: IHomeScreenProps) {
       <BigButton
         key="big generate routines button"
         onPress={duelButtonFunction}
-        color={defined_colors.dark_grey}
-        color_pressed={defined_colors.black}
       >
         {"GENERATE!"}
       </BigButton>

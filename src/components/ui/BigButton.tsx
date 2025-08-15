@@ -22,7 +22,7 @@ type BigButton<P = unknown> = P & {
   children?: React.ReactNode | undefined;
   color?: string | undefined;
   color_pressed?: string | undefined;
-  flipped?: boolean | undefined;
+  text_and_border_color?: string | undefined;
 };
 
 /**
@@ -34,9 +34,9 @@ type BigButton<P = unknown> = P & {
 export function BigButton({
   onPress,
   children,
-  color,
-  color_pressed,
-  flipped,
+  color = defined_colors.red,
+  color_pressed = defined_colors.dark_red,
+  text_and_border_color = defined_colors.white,
 }: BigButton<Props>) {
   const [buttonSize, setButtonSize] = useState(0); // button is gonna be a circle, so only needs one dimension
 
@@ -56,11 +56,12 @@ export function BigButton({
             width: buttonSize,
             height: buttonSize,
             borderRadius: buttonSize / 2,
+            borderColor: text_and_border_color,
           },
           styles.button,
         ]}
       >
-        <Text style={flipped ? styles.flippedText : styles.text}>
+        <Text style={[{ color: text_and_border_color }, styles.text]}>
           {children}
         </Text>
       </Pressable>
@@ -70,9 +71,8 @@ export function BigButton({
 
 interface Styles {
   container: ViewStyle;
-  text: TextStyle;
-  flippedText: TextStyle;
   button: ViewStyle; // temporary style to figure out desired percentage ratio for button and container
+  text: TextStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -86,17 +86,9 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: defined_colors.sienna,
   },
   text: {
     textAlign: "center",
-    color: defined_colors.bright_orange,
     fontSize: 30,
-  },
-  flippedText: {
-    textAlign: "center",
-    color: defined_colors.bright_orange,
-    fontSize: 30,
-    transform: [{ scaleX: -1 }],
   },
 });
