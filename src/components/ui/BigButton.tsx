@@ -1,9 +1,9 @@
 /**
- * DemoButton.tsx
+ * BigButton.tsx
  *
  * Button module
  */
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,7 +18,7 @@ interface Props {
   onPress: () => void;
 }
 
-type DemoButtonProps<P = unknown> = P & {
+type BigButton<P = unknown> = P & {
   children?: React.ReactNode | undefined;
   color?: string | undefined;
   color_pressed?: string | undefined;
@@ -31,20 +31,27 @@ type DemoButtonProps<P = unknown> = P & {
  * @param param0
  * @returns
  */
-export function DemoButton({
+export function BigButton({
   onPress,
   children,
   color,
   color_pressed,
   flipped,
-}: DemoButtonProps<Props>) {
+}: BigButton<Props>) {
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   return (
-    <View style={styles.duelView}>
+    <View
+      style={styles.container}
+      onLayout={(event) => {
+        const { width, height } = event.nativeEvent.layout;
+        setContainerSize({ width, height });
+      }}
+    >
       <Pressable
         onPress={onPress}
         style={({ pressed }) => [
           { backgroundColor: pressed ? color_pressed : color },
-          styles.container,
+          styles.button,
         ]}
       >
         <Text style={flipped ? styles.flippedText : styles.text}>
@@ -59,26 +66,20 @@ interface Styles {
   container: ViewStyle;
   text: TextStyle;
   flippedText: TextStyle;
-  duelView: ViewStyle; // temporary style to figure out desired percentage ratio for button and container
+  button: ViewStyle; // temporary style to figure out desired percentage ratio for button and container
 }
 
 const styles = StyleSheet.create<Styles>({
-  duelView: {
-    height: 250,
-    width: 185,
+  container: {
+    height: "100%",
+    width: "100%",
     justifyContent: "center",
     alignSelf: "center",
-    marginBottom: "63%",
   },
-  container: {
+  button: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    height: 45,
-    minWidth: "45%",
-    maxWidth: "100%",
-    marginHorizontal: 8,
-    marginVertical: 4,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: defined_colors.sienna,
