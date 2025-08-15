@@ -38,7 +38,6 @@ export function BigButton({
   color_pressed,
   flipped,
 }: BigButton<Props>) {
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [buttonSize, setButtonSize] = useState(0); // button is gonna be a circle, so only needs one dimension
 
   return (
@@ -46,17 +45,17 @@ export function BigButton({
       style={styles.container}
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
-        setContainerSize({ width, height });
+        setButtonSize(Math.min(width, height));
       }}
     >
       <Pressable
         onPress={onPress}
         style={({ pressed }) => [
-          { backgroundColor: pressed ? color_pressed : color },
           {
-            width: containerSize.width,
-            height: containerSize.height,
-            borderRadius: containerSize.height / 2,
+            backgroundColor: pressed ? color_pressed : color,
+            width: buttonSize,
+            height: buttonSize,
+            borderRadius: buttonSize / 2,
           },
           styles.button,
         ]}
