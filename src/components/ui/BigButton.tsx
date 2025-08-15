@@ -39,6 +39,8 @@ export function BigButton({
   flipped,
 }: BigButton<Props>) {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [buttonSize, setButtonSize] = useState(0); // button is gonna be a circle, so only needs one dimension
+
   return (
     <View
       style={styles.container}
@@ -51,6 +53,11 @@ export function BigButton({
         onPress={onPress}
         style={({ pressed }) => [
           { backgroundColor: pressed ? color_pressed : color },
+          {
+            width: containerSize.width,
+            height: containerSize.height,
+            borderRadius: containerSize.height / 2,
+          },
           styles.button,
         ]}
       >
@@ -77,10 +84,8 @@ const styles = StyleSheet.create<Styles>({
     alignSelf: "center",
   },
   button: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 8,
     borderWidth: 1,
     borderColor: defined_colors.sienna,
   },
