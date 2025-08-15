@@ -8,6 +8,9 @@ I want my own app to generate my various routines at the gym
 
 ### To do
 
+> add clock and day selector on homeScreen
+> create two different screens for RoutineScreen: one as a list, another as flashcards; button on top right to toggle between them; make routines stored in appcontext
+
 > rework to gym counter app
 > basic framework:
 > home screen: choose what work out day (button/drawer). big button to generate
