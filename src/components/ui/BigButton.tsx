@@ -85,6 +85,7 @@ const styles = StyleSheet.create<Styles>({
     width: "100%",
     justifyContent: "center",
     alignSelf: "center",
+    alignItems: "center",
     borderColor: defined_colors.white,
     borderWidth: 1,
   },
@@ -95,6 +96,6 @@ const styles = StyleSheet.create<Styles>({
   },
   text: {
     textAlign: "center",
-    fontSize: 1000,
+    fontSize: 90,
   },
 });
