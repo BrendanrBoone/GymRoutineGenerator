@@ -5,6 +5,7 @@ I want my own app to generate my various routines at the gym
 ### Notes
 
 > maybe make a optional backend feature so the user can customize/remember what weight and number of sets they use
+> just a funny check point
 
 ### To do
 
