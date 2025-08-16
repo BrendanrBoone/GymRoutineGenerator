@@ -15,7 +15,7 @@ import { BigButton } from "../components/ui/BigButton";
 import route_names, { IHomeScreenProps } from "../routes";
 import defined_colors from "../components/ui/colors";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
-import { ArrowSelector } from "../components/ui/ArrowSelector";
+import { Clock } from "../components/ui/Clock";
 import { IPlayer } from "../components/state/IBattleDocument";
 import useAppContext from "../components/hooks/useAppContext";
 
@@ -63,6 +63,7 @@ export default function HomeScreen(props: IHomeScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Clock />
       <BigButton
         key="big generate routines button"
         onPress={duelButtonFunction}
