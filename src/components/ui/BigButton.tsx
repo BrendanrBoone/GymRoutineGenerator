@@ -61,7 +61,11 @@ export function BigButton({
           styles.button,
         ]}
       >
-        <Text style={[{ color: text_and_border_color }, styles.text]}>
+        <Text
+          style={[{ color: text_and_border_color }, styles.text]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
           {children}
         </Text>
       </Pressable>
@@ -77,10 +81,12 @@ interface Styles {
 
 const styles = StyleSheet.create<Styles>({
   container: {
-    height: "100%",
+    height: "60%",
     width: "100%",
     justifyContent: "center",
     alignSelf: "center",
+    borderColor: defined_colors.white,
+    borderWidth: 1,
   },
   button: {
     justifyContent: "center",
@@ -89,6 +95,6 @@ const styles = StyleSheet.create<Styles>({
   },
   text: {
     textAlign: "center",
-    fontSize: 30,
+    fontSize: 1000,
   },
 });

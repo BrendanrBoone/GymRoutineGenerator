@@ -83,9 +83,6 @@ const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
-    borderWidth: 0,
-    borderColor: "red",
     backgroundColor: defined_colors.dark_grey,
   },
   title: {

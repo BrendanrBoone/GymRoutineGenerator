@@ -13,7 +13,7 @@ const defined_colors = {
     dark_blue: "darkblue",
     red: "red",
     dark_red: "#630903",
-    white: 'white',
+    white: "white",
     dark_brownishpurple: '#3F1D38',
     slightlybrown_darkgrey: '#5E454B',
     white_Thatisalittlered: '#FAF0E6'
