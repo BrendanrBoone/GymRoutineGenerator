@@ -1,6 +1,6 @@
 import { View, Text, ViewStyle, TextStyle, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-import defined_colors from "../ui/colors";
+import defined_colors from "../util/colors";
 
 export function Clock() {
   const [time, setTime] = useState(new Date());

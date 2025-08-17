@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { StyleSheet, View, SafeAreaView, Modal, Text } from "react-native";
 import route_names, { IBattleScreenProps } from "../routes";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
-import defined_colors from "../components/ui/colors";
+import defined_colors from "../components/util/colors";
 import { PlayerButton } from "../components/ui/PlayerButton";
 import useAppContext from "../components/hooks/useAppContext";
 import { IPlayer } from "../components/state/IBattleDocument";

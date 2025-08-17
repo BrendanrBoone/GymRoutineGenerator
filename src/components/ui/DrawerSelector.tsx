@@ -1,7 +1,7 @@
 /**
- * BigButton.tsx
+ * DrawerSelector.tsx
  *
- * Button module
+ * Drawer module
  */
 import React, { useState } from "react";
 import {
@@ -18,7 +18,7 @@ interface Props {
   onPress: () => void;
 }
 
-type BigButton<P = unknown> = P & {
+type DrawerSelector<P = unknown> = P & {
   children?: React.ReactNode | undefined;
   color?: string | undefined;
   color_pressed?: string | undefined;
@@ -31,13 +31,13 @@ type BigButton<P = unknown> = P & {
  * @param param0
  * @returns
  */
-export function BigButton({
+export function DrawerNav({
   onPress,
   children,
   color = defined_colors.red,
   color_pressed = defined_colors.dark_red,
   text_and_border_color = defined_colors.white,
-}: BigButton<Props>) {
+}: DrawerSelector<Props>) {
   const [buttonSize, setButtonSize] = useState(0); // button is gonna be a circle, so only needs one dimension
 
   return (

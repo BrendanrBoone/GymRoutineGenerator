@@ -13,11 +13,15 @@ import {
 } from "react-native";
 import { BigButton } from "../components/ui/BigButton";
 import route_names, { IHomeScreenProps } from "../routes";
-import defined_colors from "../components/ui/colors";
+import defined_colors from "../components/util/colors";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
 import { IPlayer } from "../components/state/IBattleDocument";
 import useAppContext from "../components/hooks/useAppContext";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { RoutineDaysArray } from "../components/state/drawerArrays";
+
+const Drawer = createDrawerNavigator(); // DRAWER COMPONENT. CHANGE TO UI MODULE IF POSSIBLE
 
 /**
  * The First Screen the user sees
