@@ -18,10 +18,6 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
 import { IPlayer } from "../components/state/IBattleDocument";
 import useAppContext from "../components/hooks/useAppContext";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { RoutineDaysArray } from "../components/state/drawerArrays";
-
-const Drawer = createDrawerNavigator(); // DRAWER COMPONENT. CHANGE TO UI MODULE IF POSSIBLE
 
 /**
  * The First Screen the user sees
