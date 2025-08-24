@@ -7,7 +7,7 @@
 import { ReactNode, createContext, useState } from "react";
 import utility from "../util/utility";
 import { RoutineFormat } from "./IRoutines";
-import { defined_routines } from "./DefinedRoutines";
+import { defined_routines } from "../util/DefinedRoutines";
 
 type IAppContext = {
   generated_routines: RoutineFormat;

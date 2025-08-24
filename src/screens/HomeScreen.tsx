@@ -19,6 +19,7 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
 import { RoutineFormat } from "../components/state/IRoutines";
 import useAppContext from "../components/hooks/useAppContext";
+import { defined_routines } from "../components/util/DefinedRoutines";
 
 /**
  * The First Screen the user sees
@@ -32,54 +33,14 @@ export default function HomeScreen(props: IHomeScreenProps) {
   //allows usage of context values from AppState.tsx
   const ctx = useAppContext();
 
-  //defined variables
-  const defined_routines = [
-    "Chest/triceps/Shoulder Day",
-    "Back/biceps/Shoulder Day",
-    "Leg Day",
-    "Chest Day",
-    "Back Day",
-    "Arm Day",
-    "Shoulder Day",
-    "Core Day",
-  ];
-  const [routineDay, setRoutineDay] = useState(defined_routines[0]);
-
-  //wrapper function for ArrowSelector
-  const handleCurrentLP = (LP: number) => {
-    setCurrentLP(LP);
-  };
-
-  //Initial call of this function. Gives each player their name and starting LP
-  const updatePlayerLP = (gen_routine: RoutineFormat) => {
-    const playerName: string = player == ctx.player1 ? "Player1" : "Player2";
-    const generated_routines: RoutineFormat = {
-      ...player,
-      name: playerName,
-      countLP: newLP,
-    };
-    player == ctx.player1
-      ? ctx.updatePlayer1(updatePlayer)
-      : ctx.updatePlayer2(updatePlayer);
-  };
-
-  const generateRoutines = (player: IPlayer, newLP: number) => {
-    const playerName: string = player == ctx.player1 ? "Player1" : "Player2";
-    const updatePlayer: IPlayer = {
-      ...player,
-      name: playerName,
-      countLP: newLP,
-    };
-    player == ctx.player1
-      ? ctx.updatePlayer1(updatePlayer)
-      : ctx.updatePlayer2(updatePlayer);
-  };
+  const [routineDay, setRoutineDay] = useState<String>(
+    defined_routines[0].name
+  );
 
   //onPress function for BigButton. Moves to Routine Screen.
   const bigButtonFunction = (): void => {
     functionLibrary.printLogScreen(route_names.HOME_SCREEN);
-    updatePlayerLP(ctx.player1, currentLP);
-    updatePlayerLP(ctx.player2, currentLP);
+    ctx.generateRoutines(routineDay);
     props.navigation.navigate(route_names.BATTLE_SCREEN);
   };
 
@@ -89,7 +50,14 @@ export default function HomeScreen(props: IHomeScreenProps) {
       <BigButton key="big generate routines button" onPress={bigButtonFunction}>
         {"GENERATE!"}
       </BigButton>
-      <Picker></Picker>
+      <Picker
+        selectedValue={routineDay}
+        onValueChange={(itemValue, _) => setRoutineDay(itemValue)}
+      >
+        {defined_routines.map((routine, index) => (
+          <Picker.Item label={routine.name} value={routine.name} key={index} />
+        ))}
+      </Picker>
     </SafeAreaView>
   );
 }
