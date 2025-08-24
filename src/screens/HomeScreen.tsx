@@ -23,8 +23,7 @@ import { defined_routines } from "../components/util/DefinedRoutines";
 
 /**
  * The First Screen the user sees
- * ArrowSelector at the top to choose type of workout routine
- * DemoButton in the middle to start the LP counter
+ * Note: styles are done within each module
  *
  * @param props
  * @returns
@@ -53,9 +52,16 @@ export default function HomeScreen(props: IHomeScreenProps) {
       <Picker
         selectedValue={routineDay}
         onValueChange={(itemValue, _) => setRoutineDay(itemValue)}
+        style={styles.day_picker}
       >
         {defined_routines.map((routine, index) => (
-          <Picker.Item label={routine.name} value={routine.name} key={index} />
+          <Picker.Item
+            label={routine.name}
+            value={routine.name}
+            key={index}
+            color={defined_colors.white}
+            style={styles.day_picker}
+          />
         ))}
       </Picker>
     </SafeAreaView>
@@ -64,7 +70,7 @@ export default function HomeScreen(props: IHomeScreenProps) {
 
 interface Styles {
   container: ViewStyle;
-  title: TextStyle;
+  day_picker: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -73,8 +79,11 @@ const styles = StyleSheet.create<Styles>({
     alignItems: "center",
     backgroundColor: defined_colors.dark_grey,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
+  day_picker: {
+    height: "20%",
+    width: "100%",
+    backgroundColor: defined_colors.dark_grey,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
