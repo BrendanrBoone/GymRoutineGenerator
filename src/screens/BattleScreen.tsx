@@ -10,7 +10,7 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import defined_colors from "../components/util/colors";
 import { PlayerButton } from "../components/ui/PlayerButton";
 import useAppContext from "../components/hooks/useAppContext";
-import { IPlayer } from "../components/state/IBattleDocument";
+import { IPlayer } from "../components/state/IRoutines";
 import { DemoButton } from "../components/ui/BigButton";
 import { VideoPlayer } from "../components/ui/VideoPlayer";
 

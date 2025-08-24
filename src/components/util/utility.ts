@@ -1,31 +1,16 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { IPlayer } from "../state/IBattleDocument";
+import { RoutineFormat } from "../state/IRoutines";
 
-const createEmptyPlayerObject = () => ({
-    uid: "",
-    name: "",
-    countLP: 0,
-    win: 0,
-    loss: 0
-})
-
-// Helper function to map Firestore document data to our internal IPlayer type
-const mapDocumentDataToPlayer = (data: FirebaseFirestoreTypes.DocumentData | undefined): IPlayer => ({
-    uid: data?.uid ?? "",
-    name: data?.name ?? "",
-    countLP: data?.countLP ?? 0,
-    win: data?.win ?? 0,
-    loss: data?.loss ?? 0
+const createEmptyRoutineObject = () => ({
+    routines: [""]
 })
 
 interface IUtility {
-    createEmptyPlayerObject: () => IPlayer
-    mapDocumentDataToPlayer: (data: FirebaseFirestoreTypes.DocumentData | undefined) => IPlayer
+    createEmptyRoutineObject: () => RoutineFormat
 }
 
 const utility: IUtility = {
-    createEmptyPlayerObject,
-    mapDocumentDataToPlayer
+    createEmptyRoutineObject
 }
 
 export default utility;

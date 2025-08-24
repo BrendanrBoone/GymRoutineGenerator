@@ -6,20 +6,17 @@
  */
 import { ReactNode, createContext, useState } from "react";
 import utility from "../util/utility";
-import { IPlayer } from "./IBattleDocument";
+import { RoutineFormat } from "./IRoutines";
+import { defined_routines } from "./DefinedRoutines";
 
-export type IAppContext = {
-  player1: IPlayer;
-  player2: IPlayer;
-  updatePlayer1: (player: IPlayer) => void;
-  updatePlayer2: (player: IPlayer) => void;
+type IAppContext = {
+  generated_routines: RoutineFormat;
+  generateRoutines: (routine_day: String) => void;
 };
 
 export const AppContext = createContext<IAppContext>({
-  player1: utility.createEmptyPlayerObject(),
-  player2: utility.createEmptyPlayerObject(),
-  updatePlayer1: () => {},
-  updatePlayer2: () => {},
+  generated_routines: utility.createEmptyRoutineObject(),
+  generateRoutines: () => {},
 });
 
 interface IAppState {
@@ -28,32 +25,24 @@ interface IAppState {
 
 export default function AppState(props: IAppState) {
   //set values for Player1
-  const [player1, setPlayer1] = useState<IPlayer>(
-    utility.createEmptyPlayerObject()
+  const [routines, setRoutines] = useState<RoutineFormat>(
+    utility.createEmptyRoutineObject()
   );
 
-  //set values for Player2
-  const [player2, setPlayer2] = useState<IPlayer>(
-    utility.createEmptyPlayerObject()
-  );
-
-  //exported function to update vales for player 1
-  const updatePlayer1 = (player: IPlayer) => {
-    setPlayer1(player);
-  };
-
-  //exported function to update vales for player 2
-  const updatePlayer2 = (player: IPlayer) => {
-    setPlayer2(player);
+  //exported function to generate routines for user according to specified day
+  // rng, sorting algorithm by weight, source of routines in day format
+  const generateRoutines = (routine_day: string) => {
+    let number_of_routines = 0;
+    while (
+      number_of_routines < defined_routines[routine_day].number_of_exercises
+    ) {}
   };
 
   return (
     <AppContext.Provider
       value={{
-        player1: player1,
-        player2: player2,
-        updatePlayer1,
-        updatePlayer2,
+        generated_routines: routines,
+        generateRoutines: generateRoutines,
       }}
     >
       {props.children}

@@ -8,7 +8,7 @@ import { StyleSheet, Text, View, SafeAreaView, Dimensions } from "react-native";
 import route_names, { ICalculationScreenProps } from "../routes";
 import useAppContext from "../components/hooks/useAppContext";
 import defined_colors from "../components/util/colors";
-import { IPlayer } from "../components/state/IBattleDocument";
+import { IPlayer } from "../components/state/IRoutines";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { LpChooser } from "../components/ui/LpChooser";
 import { TouchableOpacity } from "react-native-gesture-handler";

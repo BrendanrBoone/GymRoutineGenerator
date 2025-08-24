@@ -5,7 +5,7 @@
  * location of definitions for screen navigation and names
  */
 import { StackScreenProps } from "@react-navigation/stack";
-import { IPlayer } from "./components/state/IBattleDocument";
+import { IPlayer } from "./components/state/IRoutines";
 
 /**
  * Defines the parameters to a screen
