@@ -10,8 +10,8 @@ I want my own app to generate my various routines at the gym
 
 ### To do
 
-> add day selector on homeScreen
 > create two different screens for RoutineScreen: one as a list, another as flashcards; button on top right to toggle between them; make routines stored in appcontext
+> rename icon directory and icons.tsx: they mean different things
 
 > context: routines generated
 > firebase: store number of sets, weight, number of attempts, account/name

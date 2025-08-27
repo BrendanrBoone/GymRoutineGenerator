@@ -5,41 +5,44 @@
  * location of definitions for screen navigation and names
  */
 import { StackScreenProps } from "@react-navigation/stack";
-import { IPlayer } from "./components/state/IRoutines";
 
 /**
  * Defines the parameters to a screen
  * 
  * ::App Route Plan::
  * 
- * HomeScreen: choose LP type 4000 or 8000
+ * HomeScreen: choose Routine Day
  * 
- * BattleScreen: two buttons with animations for LPs
+ * RoutineScreen: Show all generated routines. Routines are selectable to details screen
  * 
- * CalculationScreen: edit LP counter.
+ * DetailsScreen: Show exercise, guide, video, sets (calculator maybe), current weight. weight and sets are adjustable
  */
 export type IStackParamList = {
     [route_names.HOME_SCREEN]: undefined,
-    [route_names.BATTLE_SCREEN]: undefined,
-    [route_names.CALCULATION_SCREEN]: {player: IPlayer, flipped: boolean}
+    [route_names.ROUTINE_SCREEN_LIST]: undefined,
+    [route_names.ROUTINE_SCREEN_SLIDES]: undefined,
+    [route_names.DETAILS_SCREEN]: {exercise: string}
 };
 
 export interface IRoutes {
     HOME_SCREEN: "Home",
-    BATTLE_SCREEN: "Battle",
-    CALCULATION_SCREEN: "Calculation"
+    ROUTINE_SCREEN_LIST: "Routine List",
+    ROUTINE_SCREEN_SLIDES: "Routine Slide",
+    DETAILS_SCREEN: "Details"
 };
 
 //defined route names
 const route_names: IRoutes = {
     HOME_SCREEN: "Home",
-    BATTLE_SCREEN: "Battle",
-    CALCULATION_SCREEN: "Calculation"
+    ROUTINE_SCREEN_LIST: "Routine List",
+    ROUTINE_SCREEN_SLIDES: "Routine Slide",
+    DETAILS_SCREEN: "Details"
 };
 
 // Stack Screen Props. ie provides parameter information and such when within a screen
 export type IHomeScreenProps = StackScreenProps<IStackParamList, typeof route_names.HOME_SCREEN>;
-export type IBattleScreenProps = StackScreenProps<IStackParamList, typeof route_names.BATTLE_SCREEN>;
-export type ICalculationScreenProps = StackScreenProps<IStackParamList, typeof route_names.CALCULATION_SCREEN>;
+export type IRoutineScreenListProps = StackScreenProps<IStackParamList, typeof route_names.ROUTINE_SCREEN_LIST>;
+export type IRoutineScreenSlidesProps = StackScreenProps<IStackParamList, typeof route_names.ROUTINE_SCREEN_SLIDES>;
+export type IDetailsScreenProps = StackScreenProps<IStackParamList, typeof route_names.DETAILS_SCREEN>;
 
 export default route_names;

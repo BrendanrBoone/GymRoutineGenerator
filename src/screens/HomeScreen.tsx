@@ -17,7 +17,6 @@ import route_names, { IHomeScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
-import { RoutineFormat } from "../components/state/IRoutines";
 import useAppContext from "../components/hooks/useAppContext";
 import { defined_routines } from "../components/util/DefinedRoutines";
 
@@ -40,7 +39,7 @@ export default function HomeScreen(props: IHomeScreenProps) {
   const bigButtonFunction = (): void => {
     functionLibrary.printLogScreen(route_names.HOME_SCREEN);
     ctx.generateRoutines(routineDay);
-    props.navigation.navigate(route_names.BATTLE_SCREEN);
+    props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
   };
 
   return (
