@@ -8,15 +8,22 @@ import { ReactNode, createContext, useState } from "react";
 import utility from "../util/utility";
 import { RoutineFormat } from "./IRoutines";
 import { defined_routines } from "../util/DefinedRoutines";
+import { auth, db } from "../../../FirebaseConfig";
+import { Auth } from "firebase/auth";
+import { Firestore } from "firebase/firestore";
 
 type IAppContext = {
   generated_routines: RoutineFormat;
   generateRoutines: (routine_day: String) => void;
+  auth: Auth;
+  db: Firestore;
 };
 
 export const AppContext = createContext<IAppContext>({
   generated_routines: utility.createEmptyRoutineObject(),
   generateRoutines: () => {},
+  auth: auth,
+  db: db,
 });
 
 interface IAppState {
@@ -24,7 +31,7 @@ interface IAppState {
 }
 
 export default function AppState(props: IAppState) {
-  //set values for Player1
+  //initialize routines object
   const [routines, setRoutines] = useState<RoutineFormat>(
     utility.createEmptyRoutineObject()
   );
@@ -43,6 +50,8 @@ export default function AppState(props: IAppState) {
       value={{
         generated_routines: routines,
         generateRoutines: generateRoutines,
+        auth: auth,
+        db: db,
       }}
     >
       {props.children}

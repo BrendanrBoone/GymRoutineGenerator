@@ -6,7 +6,6 @@
 
 import React from "react";
 import { useColorScheme } from "react-native";
-import "FirebaseConfig.ts";
 import {
   DarkTheme,
   DefaultTheme,
