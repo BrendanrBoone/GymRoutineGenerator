@@ -58,6 +58,7 @@ export default function SignUpScreen(props: ISignUpScreenProps) {
         placeholder="password"
         value={password}
         onChangeText={setPassword}
+        secureTextEntry={true}
       />
       <TouchableOpacity style={styles.button} onPress={signUp}>
         <Text style={styles.text}>Make Account</Text>
