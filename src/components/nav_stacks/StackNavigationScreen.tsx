@@ -1,27 +1,56 @@
 /**
  * StackNavigationScreen.tsx
- * 
+ *
  * Navigational stack of screens for app
  */
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from "@react-navigation/stack";
 import route_names, { IStackParamList } from "../../routes";
 import HomeScreen from "../../screens/HomeScreen";
-import BattleScreen from "../../screens/BattleScreen";
-import CalculationScreen from "../../screens/CalculationScreen";
+import RoutineScreenList from "../../screens/RoutineScreenList";
+import RoutineScreenSlides from "../../screens/RoutineScreenSlides";
+import DetailsScreen from "../../screens/DetailsScreen";
+import SignUpScreen from "../../screens/SignUpScreen";
+import SignOutScreen from "../../screens/SignOutScreen";
 
 const HomeStack = createStackNavigator<IStackParamList>();
 
 /**
  * Starts at HomeScreen.
- * 
+ *
+ * Note: Navigator id is undefined to avoid warning. may be fixed with updated version of react-navigation
  * @returns Navigational Stack of Screens.
  */
 export default function StackNavigationScreen() {
-    return (
-        <HomeStack.Navigator screenOptions={{headerShown: false}}>
-            <HomeStack.Screen name={route_names.HOME_SCREEN} component={HomeScreen} />
-            <HomeStack.Screen name={route_names.BATTLE_SCREEN} component={BattleScreen} />
-            <HomeStack.Screen name={route_names.CALCULATION_SCREEN} component={CalculationScreen} />
-        </HomeStack.Navigator>
-    );
+  const screen_options: StackNavigationOptions = {
+    headerShown: false,
+  };
+
+  return (
+    <HomeStack.Navigator id={undefined} screenOptions={screen_options}>
+      <HomeStack.Screen
+        name={route_names.SIGN_UP_SCREEN}
+        component={SignUpScreen}
+      />
+      <HomeStack.Screen
+        name={route_names.SIGN_OUT_SCREEN}
+        component={SignOutScreen}
+      />
+      <HomeStack.Screen name={route_names.HOME_SCREEN} component={HomeScreen} />
+      <HomeStack.Screen
+        name={route_names.ROUTINE_SCREEN_LIST}
+        component={RoutineScreenList}
+      />
+      <HomeStack.Screen
+        name={route_names.ROUTINE_SCREEN_SLIDES}
+        component={RoutineScreenSlides}
+      />
+      <HomeStack.Screen
+        name={route_names.DETAILS_SCREEN}
+        component={DetailsScreen}
+      />
+    </HomeStack.Navigator>
+  );
 }
