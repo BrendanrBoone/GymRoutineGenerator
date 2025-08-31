@@ -1,7 +1,7 @@
 /**
- * SignUpScreen.tsx
+ * LoginScreen.tsx
  *
- * Sign-up Screen.
+ * Sign-in Screen.
  */
 
 import {
@@ -13,17 +13,17 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { auth } from "../../FirebaseConfig";
-import route_names, { ISignUpScreenProps } from "../routes";
+import route_names, { ILoginScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-export default function SignUpScreen(props: ISignUpScreenProps) {
+export default function LoginScreen(props: ILoginScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signUp = async () => {
+  const signIn = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const user = await signInWithEmailAndPassword(auth, email, password);
       if (user) props.navigation.navigate(route_names.HOME_SCREEN);
     } catch (error: any) {
       console.log(error);
@@ -31,9 +31,13 @@ export default function SignUpScreen(props: ISignUpScreenProps) {
     }
   };
 
+  const moveToSignUp = async () => {
+    props.navigation.navigate(route_names.SIGN_UP_SCREEN);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.textInput}
         placeholder="email"
@@ -47,8 +51,11 @@ export default function SignUpScreen(props: ISignUpScreenProps) {
         onChangeText={setPassword}
         secureTextEntry={true}
       />
-      <TouchableOpacity style={styles.button} onPress={signUp}>
-        <Text style={styles.text}>Make Account</Text>
+      <TouchableOpacity style={styles.button} onPress={moveToSignUp}>
+        <Text style={styles.text}>Sign-up/Make-account</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={signIn}>
+        <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

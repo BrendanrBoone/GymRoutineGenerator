@@ -27,7 +27,8 @@ export type IStackParamList = {
     [route_names.ROUTINE_SCREEN_SLIDES]: undefined,
     [route_names.DETAILS_SCREEN]: {exercise: string},
     [route_names.SIGN_UP_SCREEN]: undefined,
-    [route_names.SIGN_OUT_SCREEN]: undefined
+    [route_names.SIGN_OUT_SCREEN]: undefined,
+    [route_names.LOGIN_SCREEN]: undefined
 };
 
 export interface IRoutes {
@@ -36,7 +37,8 @@ export interface IRoutes {
     ROUTINE_SCREEN_SLIDES: "Routine Slide",
     DETAILS_SCREEN: "Details",
     SIGN_UP_SCREEN: "Sign Up",
-    SIGN_OUT_SCREEN: "Sign Out"
+    SIGN_OUT_SCREEN: "Sign Out",
+    LOGIN_SCREEN: "Log in"
 };
 
 //defined route names
@@ -46,7 +48,8 @@ const route_names: IRoutes = {
     ROUTINE_SCREEN_SLIDES: "Routine Slide",
     DETAILS_SCREEN: "Details",
     SIGN_UP_SCREEN: "Sign Up",
-    SIGN_OUT_SCREEN: "Sign Out"
+    SIGN_OUT_SCREEN: "Sign Out",
+    LOGIN_SCREEN: "Log in"
 };
 
 // Stack Screen Props. ie provides parameter information and such when within a screen
@@ -56,5 +59,6 @@ export type IRoutineScreenSlidesProps = StackScreenProps<IStackParamList, typeof
 export type IDetailsScreenProps = StackScreenProps<IStackParamList, typeof route_names.DETAILS_SCREEN>;
 export type ISignUpScreenProps = StackScreenProps<IStackParamList, typeof route_names.SIGN_UP_SCREEN>;
 export type ISignOutScreenProps = StackScreenProps<IStackParamList, typeof route_names.SIGN_OUT_SCREEN>;
+export type ILoginScreenProps = StackScreenProps<IStackParamList, typeof route_names.LOGIN_SCREEN>;
 
 export default route_names;

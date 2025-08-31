@@ -14,6 +14,7 @@ import RoutineScreenSlides from "../../screens/RoutineScreenSlides";
 import DetailsScreen from "../../screens/DetailsScreen";
 import SignUpScreen from "../../screens/SignUpScreen";
 import SignOutScreen from "../../screens/SignOutScreen";
+import LoginScreen from "../../screens/LoginScreen";
 
 const HomeStack = createStackNavigator<IStackParamList>();
 
@@ -30,6 +31,10 @@ export default function StackNavigationScreen() {
 
   return (
     <HomeStack.Navigator id={undefined} screenOptions={screen_options}>
+      <HomeStack.Screen
+        name={route_names.LOGIN_SCREEN}
+        component={LoginScreen}
+      />
       <HomeStack.Screen
         name={route_names.SIGN_UP_SCREEN}
         component={SignUpScreen}
