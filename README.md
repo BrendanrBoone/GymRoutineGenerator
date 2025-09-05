@@ -4,9 +4,8 @@ I want my own app to generate my various routines at the gym
 
 ### Notes
 
-> maybe make a optional backend feature so the user can customize/remember what weight and number of sets they use
+> REMOVE DRAWERNAVIGATION
 > experiment with routines in back-end
-> CHANGE METHOD OF UTILIZING DEFINED ROUTINES. NEED MODULAR EXERCISE OBJECTS CATEGORIZED WITHIN THEM. THAT CAN BE ADDED AND EDITED WITHIN THE APP.
 
 ### To do
 

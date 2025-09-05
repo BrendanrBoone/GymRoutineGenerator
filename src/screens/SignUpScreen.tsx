@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     color: defined_colors.dark_blue,
   },
   textInput: {
-    height: 50,
+    height: 70,
     width: "90%",
     paddingHorizontal: 25,
     fontSize: 16,

@@ -24,7 +24,7 @@ export default function LoginScreen(props: ILoginScreenProps) {
   const signIn = async () => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      if (user) props.navigation.navigate(route_names.HOME_SCREEN);
+      if (user) props.navigation.navigate(route_names.GENERATE_SCREEN);
     } catch (error: any) {
       console.log(error);
       alert("Sign in failed: " + error.message);
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     color: defined_colors.dark_blue,
   },
   textInput: {
-    height: 50,
+    height: 70,
     width: "90%",
     paddingHorizontal: 25,
     fontSize: 16,

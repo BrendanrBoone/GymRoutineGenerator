@@ -4,8 +4,7 @@
  * Routine Screen component.
  * Lists all generated routines
  */
-import { useState, useEffect, useRef, useCallback } from "react";
-import { StyleSheet, View, SafeAreaView, Modal, Text } from "react-native";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
 import route_names, { IRoutineScreenListProps } from "../routes";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import defined_colors from "../components/util/colors";
@@ -30,7 +29,11 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
     });
   };
 
-  return <SafeAreaView style={styles.container}></SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text>Routine Screen List</Text>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

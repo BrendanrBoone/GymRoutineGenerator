@@ -11,7 +11,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from "@react-navigation/native";
-import StackNavigationScreen from "./src/components/nav_stacks/StackNavigationScreen";
+import StackNavigationScreen from "./src/components/navigation/StackNavigationScreen";
 import AppState from "./src/components/state/AppState";
 
 /**
