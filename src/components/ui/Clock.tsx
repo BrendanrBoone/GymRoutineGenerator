@@ -26,7 +26,6 @@ interface Styles {
 
 const styles = StyleSheet.create<Styles>({
   container: {
-    height: "20%",
     justifyContent: "center",
     alignItems: "center",
     borderColor: defined_colors.white,

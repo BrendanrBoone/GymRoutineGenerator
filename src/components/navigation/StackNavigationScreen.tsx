@@ -14,6 +14,8 @@ import DetailsScreen from "../../screens/DetailsScreen";
 import SignUpScreen from "../../screens/SignUpScreen";
 import LoginScreen from "../../screens/LoginScreen";
 import GenerateScreen from "@/src/screens/GenerateScreen";
+import SignOutScreen from "@/src/screens/SignOutScreen";
+import AddExerciseScreen from "@/src/screens/AddExerciseScreen";
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -39,8 +41,16 @@ export default function StackNavigationScreen() {
         component={SignUpScreen}
       />
       <RootStack.Screen
+        name={route_names.SIGN_OUT_SCREEN}
+        component={SignOutScreen}
+      />
+      <RootStack.Screen
         name={route_names.GENERATE_SCREEN}
         component={GenerateScreen}
+      />
+      <RootStack.Screen
+        name={route_names.ADD_EXERCISE_SCREEN}
+        component={AddExerciseScreen}
       />
       <RootStack.Screen
         name={route_names.ROUTINE_SCREEN_LIST}
