@@ -9,7 +9,6 @@ import {
   View,
   SafeAreaView,
   ViewStyle,
-  TextStyle,
   Text,
   TouchableOpacity,
 } from "react-native";
@@ -40,7 +39,11 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   //onPress function for BigButton. Moves to Routine Screen.
   const bigButtonFunction = (): void => {
     functionLibrary.printLogScreen(route_names.GENERATE_SCREEN);
-    ctx.generateRoutines(routineDay);
+    err = ctx.generateRoutines(routineDay); // err is string
+    if (err) {
+      console.log("error log: ", err);
+      return;
+    }
     props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
   };
 
@@ -48,18 +51,32 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
     props.navigation.navigate(route_names.SIGN_OUT_SCREEN);
   };
 
+  const addExerButtonFunction = async () => {
+    props.navigation.navigate(route_names.ADD_EXERCISE_SCREEN);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Clock />
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={logoutButtonFunction}
-        >
-          <Text style={{ color: defined_colors.white, fontSize: 30 }}>
-            Logout
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.hamburger}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={logoutButtonFunction}
+          >
+            <Text style={{ color: defined_colors.white, fontSize: 20 }}>
+              Logout
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={addExerButtonFunction}
+          >
+            <Text style={{ color: defined_colors.white, fontSize: 20 }}>
+              AddExer
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <BigButton key="big generate routines button" onPress={bigButtonFunction}>
         {"GENERATE!"}
@@ -87,6 +104,8 @@ interface Styles {
   container: ViewStyle;
   day_picker: ViewStyle;
   header: ViewStyle;
+  hamburger: ViewStyle;
+  button: ViewStyle;
   logoutButton: ViewStyle;
 }
 
@@ -113,11 +132,25 @@ const styles = StyleSheet.create<Styles>({
     borderWidth: 1,
     borderColor: defined_colors.red,
   },
-  logoutButton: {
+  hamburger: {
     marginLeft: "auto",
-    zIndex: 1,
-    height: "60%",
+    alignItems: "center",
     width: "30%",
+    height: "100%",
+    borderWidth: 1,
+    borderColor: defined_colors.red,
+  },
+  button: {
+    width: "100%",
+    height: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: defined_colors.light_blue,
+    opacity: 0.6,
+  },
+  logoutButton: {
+    width: "100%",
+    height: "50%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: defined_colors.purple,
