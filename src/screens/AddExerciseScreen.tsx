@@ -40,6 +40,10 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   //allows usage of context values from AppState.tsx
   const ctx = useAppContext();
 
+  const [exercise, setExercise] = useState("");
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

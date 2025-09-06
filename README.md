@@ -4,11 +4,12 @@ I want my own app to generate my various routines at the gym
 
 ### Notes
 
-> implement expo-router after finishing screen and back-end functionality
+> implement expo-router after finishing screens and back-end functionality
 
 ### To do
 
 > rename icon directory and icons.tsx: they mean different things
+> make addExerciseScreen design. consider: name, picture, weight/cardio, (Sets x Reps)/time
 
 > context: routines generated
 > firebase: store number of sets, weight, number of attempts, \*account/name
