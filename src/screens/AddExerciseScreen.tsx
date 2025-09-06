@@ -3,7 +3,7 @@
  *
  * Add Exercise Screen component.
  */
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -13,18 +13,25 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { BigButton } from "../components/ui/BigButton";
 import route_names, { IAddExerciseScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
-import { Clock } from "../components/ui/Clock";
 import useAppContext from "../components/hooks/useAppContext";
-import { defined_routines } from "../components/util/DefinedRoutines";
+import { db } from "../../FirebaseConfig";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 /**
- * The First Screen the user sees
- * Note: styles are done within each module
+ * Add Exercises to the Firebase Firestore Database
  *
  * @param props
  * @returns
@@ -32,21 +39,6 @@ import { defined_routines } from "../components/util/DefinedRoutines";
 export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   //allows usage of context values from AppState.tsx
   const ctx = useAppContext();
-
-  const [routineDay, setRoutineDay] = useState<String>(
-    defined_routines[0].name
-  );
-
-  //onPress function for BigButton. Moves to Routine Screen.
-  const bigButtonFunction = (): void => {
-    functionLibrary.printLogScreen(route_names.GENERATE_SCREEN);
-    ctx.generateRoutines(routineDay);
-    props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
-  };
-
-  const logoutButtonFunction = async () => {
-    props.navigation.navigate(route_names.SIGN_OUT_SCREEN);
-  };
 
   return (
     <SafeAreaView style={styles.container}>

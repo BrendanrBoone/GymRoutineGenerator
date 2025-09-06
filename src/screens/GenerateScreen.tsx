@@ -23,7 +23,6 @@ import { defined_routines } from "../components/util/DefinedRoutines";
 
 /**
  * The First Screen the user sees
- * Note: styles are done within each module
  *
  * @param props
  * @returns
