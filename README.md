@@ -9,7 +9,7 @@ I want my own app to generate my various routines at the gym
 ### To do
 
 > rename icon directory and icons.tsx: they mean different things
-> make addExerciseScreen design. consider: name, picture, weight/cardio, (Sets x Reps)/time
+> make addExerciseScreen design. add category selection
 
 > context: routines generated
 > firebase: store number of sets, weight, number of attempts, \*account/name
