@@ -20,6 +20,7 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
 import useAppContext from "../components/hooks/useAppContext";
 import { defined_routines } from "../components/util/DefinedRoutines";
+import { getAuth } from "firebase/auth";
 
 /**
  * The First Screen the user sees
@@ -30,6 +31,7 @@ import { defined_routines } from "../components/util/DefinedRoutines";
 export default function GenerateScreen(props: IGenerateScreenProps) {
   //allows usage of context values from AppState.tsx
   const ctx = useAppContext();
+  ctx.auth = getAuth();
 
   const [routineDay, setRoutineDay] = useState<String>(
     defined_routines[0].name

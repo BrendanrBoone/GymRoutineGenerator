@@ -6,12 +6,14 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
-  View,
+  Pressable,
   SafeAreaView,
   ViewStyle,
   TextStyle,
   Text,
   TouchableOpacity,
+  TextInput,
+  View,
 } from "react-native";
 import route_names, { IAddExerciseScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
@@ -28,7 +30,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 /**
  * Add Exercises to the Firebase Firestore Database
@@ -40,83 +41,111 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   //allows usage of context values from AppState.tsx
   const ctx = useAppContext();
 
-  const [exercise, setExercise] = useState("");
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const [exerciseName, setExerciseName] = useState("");
+  const [isCardio, setIsCardio] = useState(false);
+
+  const user = ctx.auth.currentUser;
+  const exercisesCollection = collection(db, "exercises");
+
+  const addExercise = async () => {
+    if (user) {
+      await addDoc(exercisesCollection, {
+        exerciseName: exerciseName,
+        userId: user.uid,
+        sets: 0,
+        reps: 0,
+        weight: 0,
+        time: 0,
+        isCardio: isCardio,
+      });
+      alert("Exercise added");
+    } else {
+      alert("No user is signed in");
+    }
+    props.navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Clock />
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={logoutButtonFunction}
-        >
-          <Text style={{ color: defined_colors.white, fontSize: 30 }}>
-            Logout
-          </Text>
-        </TouchableOpacity>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Pressable
+          onPress={() => setIsCardio(!isCardio)}
+          style={[
+            {
+              backgroundColor: isCardio
+                ? defined_colors.red
+                : defined_colors.green,
+            },
+            styles.booleanButton,
+          ]}
+        ></Pressable>
+        <Text style={styles.text}>
+          {isCardio ? " Cardio Exercise" : " Strength Exercise"}
+        </Text>
       </View>
-      <BigButton key="big generate routines button" onPress={bigButtonFunction}>
-        {"GENERATE!"}
-      </BigButton>
-      <Picker
-        selectedValue={routineDay}
-        onValueChange={(itemValue, _) => setRoutineDay(itemValue)}
-        style={styles.day_picker}
-      >
-        {defined_routines.map((routine, index) => (
-          <Picker.Item
-            label={routine.name}
-            value={routine.name}
-            key={index}
-            color={defined_colors.white}
-            style={styles.day_picker}
-          />
-        ))}
-      </Picker>
+      <TextInput
+        style={styles.textInput}
+        placeholder="Exercise Name"
+        value={exerciseName}
+        onChangeText={setExerciseName}
+      />
+      <TouchableOpacity style={styles.button} onPress={addExercise}>
+        <Text style={styles.text}>Add Exercise</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 interface Styles {
   container: ViewStyle;
-  day_picker: ViewStyle;
-  header: ViewStyle;
-  logoutButton: ViewStyle;
+  textInput: TextStyle;
+  button: ViewStyle;
+  booleanButton: ViewStyle;
+  text: TextStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: defined_colors.dark_grey,
-  },
-  day_picker: {
-    height: "20%",
-    width: "100%",
-    backgroundColor: defined_colors.green,
-    opacity: 1,
     justifyContent: "center",
-    alignItems: "center",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  textInput: {
+    height: 70,
+    width: "90%",
+    paddingHorizontal: 25,
+    fontSize: 16,
+    color: defined_colors.darkless_grey,
+    shadowColor: defined_colors.light_grey,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  button: {
+    width: "90%",
+    marginVertical: 15,
+    backgroundColor: defined_colors.light_blue,
+    padding: 20,
+    borderRadius: 15,
     alignItems: "center",
-    width: "100%",
-    height: "20%",
+    justifyContent: "center",
+    shadowColor: defined_colors.light_blue,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  booleanButton: {
+    height: 20,
+    width: 20,
     borderWidth: 1,
-    borderColor: defined_colors.red,
+    borderRadius: 10,
+    borderColor: defined_colors.black,
   },
-  logoutButton: {
-    marginLeft: "auto",
-    zIndex: 1,
-    height: "60%",
-    width: "30%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: defined_colors.purple,
-    opacity: 0.6,
+  text: {
+    color: defined_colors.black,
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

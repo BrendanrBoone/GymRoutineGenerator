@@ -51,11 +51,11 @@ export default function LoginScreen(props: ILoginScreenProps) {
         onChangeText={setPassword}
         secureTextEntry={true}
       />
-      <TouchableOpacity style={styles.button} onPress={moveToSignUp}>
-        <Text style={styles.text}>Sign-up/Make-account</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={signIn}>
         <Text style={styles.text}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={moveToSignUp}>
+        <Text style={styles.text}>Sign-up/Make-account</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
