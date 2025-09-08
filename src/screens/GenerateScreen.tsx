@@ -59,7 +59,9 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Clock />
+        <View style={{ width: "70%" }}>
+          <Clock />
+        </View>
         <View style={styles.hamburger}>
           <TouchableOpacity
             style={styles.logoutButton}

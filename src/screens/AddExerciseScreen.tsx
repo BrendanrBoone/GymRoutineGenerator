@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import route_names, { IAddExerciseScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
-import functionLibrary from "../components/state/ScrnDepFuncLib";
+import { MultipleSelectList } from "react-native-dropdown-select-list";
 import useAppContext from "../components/hooks/useAppContext";
 import { db } from "../../FirebaseConfig";
 import {
@@ -43,9 +43,25 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
 
   const [exerciseName, setExerciseName] = useState("");
   const [isCardio, setIsCardio] = useState(false);
+  const [isShoulder, setIsShoulder] = useState(false);
+  const [isArm, setIsArm] = useState(false);
+  const [isBack, setIsBack] = useState(false);
+  const [isChest, setIsChest] = useState(false);
+  const [isCore, setIsCore] = useState(false);
+  const [isLeg, setIsLeg] = useState(false);
+  const [selected, setSelected] = useState([]);
 
   const user = ctx.auth.currentUser;
   const exercisesCollection = collection(db, "exercises");
+
+  const data = [
+    { key: "1", value: "Shoulders", onPress: () => setIsShoulder(!isShoulder) },
+    { key: "2", value: "Arms", onPress: () => setIsArm(!isArm) },
+    { key: "3", value: "Back", onPress: () => setIsBack(!isBack) },
+    { key: "4", value: "Chest", onPress: () => setIsChest(!isChest) },
+    { key: "5", value: "Core", onPress: () => setIsCore(!isCore) },
+    { key: "6", value: "Legs", onPress: () => setIsLeg(!isLeg) },
+  ];
 
   const addExercise = async () => {
     if (user) {
@@ -56,9 +72,17 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
         reps: 0,
         weight: 0,
         time: 0,
-        isCardio: isCardio,
+        categories: {
+          isCardio: isCardio,
+          isShoulder: isShoulder,
+          isArm: isArm,
+          isBack: isBack,
+          isChest: isChest,
+          isCore: isCore,
+          isLeg: isLeg,
+        },
       });
-      alert("Exercise added");
+      alert('Exercise "' + exerciseName + '" added');
     } else {
       alert("No user is signed in");
     }
@@ -67,27 +91,31 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Pressable
-          onPress={() => setIsCardio(!isCardio)}
+      <Pressable
+        onPress={() => setIsCardio(!isCardio)}
+        style={styles.booleanButton}
+      >
+        <Text
           style={[
-            {
-              backgroundColor: isCardio
-                ? defined_colors.red
-                : defined_colors.green,
-            },
-            styles.booleanButton,
+            { color: isCardio ? defined_colors.red : defined_colors.green },
+            styles.text,
           ]}
-        ></Pressable>
-        <Text style={styles.text}>
+        >
           {isCardio ? " Cardio Exercise" : " Strength Exercise"}
         </Text>
-      </View>
+      </Pressable>
       <TextInput
         style={styles.textInput}
         placeholder="Exercise Name"
         value={exerciseName}
         onChangeText={setExerciseName}
+      />
+      <MultipleSelectList
+        placeholder="Select Categories"
+        setSelected={(val: any) => setSelected(val)}
+        data={data}
+        save="value"
+        label="categories"
       />
       <TouchableOpacity style={styles.button} onPress={addExercise}>
         <Text style={styles.text}>Add Exercise</Text>
@@ -137,14 +165,16 @@ const styles = StyleSheet.create<Styles>({
     elevation: 5,
   },
   booleanButton: {
-    height: 20,
-    width: 20,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: defined_colors.black,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: defined_colors.light_blue,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
   },
   text: {
-    color: defined_colors.black,
     fontSize: 18,
     fontWeight: "600",
   },
