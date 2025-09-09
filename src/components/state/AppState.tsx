@@ -10,10 +10,20 @@ import { RoutineFormat } from "./IRoutines";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 
 type IAppContext = {
   generated_routines: RoutineFormat;
-  generateRoutines: (routine_day: String) => void;
+  generateRoutines: (routine_day: string[]) => void;
   auth: Auth;
   db: Firestore;
 };
@@ -39,7 +49,14 @@ export default function AppState(props: IAppState) {
   // rng, sorting algorithm by weight, source of routines in day format
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
-  const generateRoutines = (routine_day: string) => {};
+  const generateRoutines = (routine_day: string[]) => {
+    const user = auth.currentUser;
+    const exercisesCollection = collection(db, "exercises");
+    if (user) {
+      const q = query(exercisesCollection, where("userId", "==", user.uid));
+      const data = await getDocs(q);
+    }
+  };
 
   return (
     <AppContext.Provider

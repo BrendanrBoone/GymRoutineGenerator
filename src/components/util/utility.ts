@@ -1,4 +1,3 @@
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { RoutineFormat } from "../state/IRoutines";
 
 const createEmptyRoutineObject = () => ({
