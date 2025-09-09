@@ -22,7 +22,7 @@ import useAppContext from "../components/hooks/useAppContext";
 import { getAuth } from "firebase/auth";
 import { items } from "../components/util/IRoutineCategories";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { Icons } from "../components/util/icons";
 
 /**
  * The First Screen the user sees
@@ -86,13 +86,24 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
       </BigButton>
       <SectionedMultiSelect
         items={items}
-        IconRenderer={Icon}
+        IconRenderer={Icons.MaterialIcons as any}
         uniqueKey="id"
         subKey="children"
-        selectText="SELECT A ROUTINE DAY"
-        showDropDowns={true}
+        alwaysShowSelectText={true}
+        showDropDowns={false}
+        animateDropDowns={false}
+        selectText="good luck soldier"
         onSelectedItemsChange={setRoutineDay}
         selectedItems={routineDay}
+        styles={{
+          selectToggle: {
+            marginTop: "10%",
+          },
+        }}
+        colors={{
+          selectToggleTextColor: defined_colors.white,
+          success: defined_colors.red,
+        }}
       />
     </SafeAreaView>
   );

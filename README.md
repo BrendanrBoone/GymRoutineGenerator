@@ -5,10 +5,10 @@ I want my own app to generate my various routines at the gym
 ### Notes
 
 > implement expo-router after finishing screens and back-end functionality
+> renamed icon directory to app_icon. in case error pops up later
 
 ### To do
 
-> rename icon directory and icons.tsx: they mean different things
 > AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 
 > context: routines generated

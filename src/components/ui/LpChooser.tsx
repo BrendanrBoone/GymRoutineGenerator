@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import defined_colors from "../util/colors";
-import Feather from "react-native-vector-icons/Feather";
+import Feather from "@react-native-vector-icons/feather";
 
 type LpChooserProps<P = unknown> = P & {
   dialPadContent: (string | number)[];
