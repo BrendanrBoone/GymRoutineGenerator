@@ -122,6 +122,7 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
         data={data}
         save="value"
         label="categories"
+        boxStyles={{ width: "90%" }}
       />
       <TouchableOpacity style={styles.button} onPress={addExercise}>
         <Text style={styles.text}>Add Exercise</Text>
