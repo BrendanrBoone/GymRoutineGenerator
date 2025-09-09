@@ -42,29 +42,32 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   const ctx = useAppContext();
 
   const [exerciseName, setExerciseName] = useState("");
-  const [isCardio, setIsCardio] = useState(false);
-  const [isShoulder, setIsShoulder] = useState(false);
-  const [isArm, setIsArm] = useState(false);
-  const [isBack, setIsBack] = useState(false);
-  const [isChest, setIsChest] = useState(false);
-  const [isCore, setIsCore] = useState(false);
-  const [isLeg, setIsLeg] = useState(false);
-  const [selected, setSelected] = useState([]);
+  const [isCardio, setIsCardio] = useState(false); // cardio is seperate from other categories because it can be changed asynchronously while the others are not
+  const [selected, setSelected] = useState<string[]>([]); // array of selected categories. gets mapped to correlating boolean states
 
   const user = ctx.auth.currentUser;
   const exercisesCollection = collection(db, "exercises");
 
   const data = [
-    { key: "1", value: "Shoulders", onPress: () => setIsShoulder(!isShoulder) },
-    { key: "2", value: "Arms", onPress: () => setIsArm(!isArm) },
-    { key: "3", value: "Back", onPress: () => setIsBack(!isBack) },
-    { key: "4", value: "Chest", onPress: () => setIsChest(!isChest) },
-    { key: "5", value: "Core", onPress: () => setIsCore(!isCore) },
-    { key: "6", value: "Legs", onPress: () => setIsLeg(!isLeg) },
+    { key: "1", value: "Shoulders" },
+    { key: "2", value: "Arms" },
+    { key: "3", value: "Back" },
+    { key: "4", value: "Chest" },
+    { key: "5", value: "Core" },
+    { key: "6", value: "Legs" },
   ];
 
   const addExercise = async () => {
     if (user) {
+      // map selected categories to boolean states
+      const isShoulder: boolean = selected.includes("Shoulders");
+      const isArms: boolean = selected.includes("Arms");
+      const isBack: boolean = selected.includes("Back");
+      const isChest: boolean = selected.includes("Chest");
+      const isCore: boolean = selected.includes("Core");
+      const isLegs: boolean = selected.includes("Legs");
+
+      // add exercise document to firestore
       await addDoc(exercisesCollection, {
         exerciseName: exerciseName,
         userId: user.uid,
@@ -75,11 +78,11 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
         categories: {
           isCardio: isCardio,
           isShoulder: isShoulder,
-          isArm: isArm,
+          isArm: isArms,
           isBack: isBack,
           isChest: isChest,
           isCore: isCore,
-          isLeg: isLeg,
+          isLegs: isLegs,
         },
       });
       alert('Exercise "' + exerciseName + '" added');
@@ -92,7 +95,10 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable
-        onPress={() => setIsCardio(!isCardio)}
+        onPress={() => {
+          setIsCardio(!isCardio);
+          console.log(selected);
+        }}
         style={styles.booleanButton}
       >
         <Text
@@ -112,7 +118,7 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
       />
       <MultipleSelectList
         placeholder="Select Categories"
-        setSelected={(val: any) => setSelected(val)}
+        setSelected={setSelected}
         data={data}
         save="value"
         label="categories"
