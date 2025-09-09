@@ -20,6 +20,7 @@ import defined_colors from "../components/util/colors";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import useAppContext from "../components/hooks/useAppContext";
 import { db } from "../../FirebaseConfig";
+import data from "../components/util/IRoutineCategories";
 import {
   collection,
   addDoc,
@@ -47,15 +48,6 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
 
   const user = ctx.auth.currentUser;
   const exercisesCollection = collection(db, "exercises");
-
-  const data = [
-    { key: "1", value: "Shoulders" },
-    { key: "2", value: "Arms" },
-    { key: "3", value: "Back" },
-    { key: "4", value: "Chest" },
-    { key: "5", value: "Core" },
-    { key: "6", value: "Legs" },
-  ];
 
   const addExercise = async () => {
     if (user) {

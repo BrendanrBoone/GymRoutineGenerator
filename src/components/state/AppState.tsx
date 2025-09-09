@@ -7,7 +7,6 @@
 import { ReactNode, createContext, useState } from "react";
 import utility from "../util/utility";
 import { RoutineFormat } from "./IRoutines";
-import { defined_routines } from "../util/DefinedRoutines";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
@@ -38,12 +37,9 @@ export default function AppState(props: IAppState) {
 
   //exported function to generate routines for user according to specified day
   // rng, sorting algorithm by weight, source of routines in day format
-  const generateRoutines = (routine_day: string) => {
-    let number_of_routines = 0;
-    while (
-      number_of_routines < defined_routines[routine_day].number_of_exercises
-    ) {}
-  };
+  // returns error string
+  // ex: "not enough exercises in category (minimum 5, currently [amount])"
+  const generateRoutines = (routine_day: string) => {};
 
   return (
     <AppContext.Provider

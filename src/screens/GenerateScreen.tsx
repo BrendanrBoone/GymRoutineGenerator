@@ -19,8 +19,10 @@ import defined_colors from "../components/util/colors";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import { Clock } from "../components/ui/Clock";
 import useAppContext from "../components/hooks/useAppContext";
-import { defined_routines } from "../components/util/DefinedRoutines";
 import { getAuth } from "firebase/auth";
+import { items } from "../components/util/IRoutineCategories";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 /**
  * The First Screen the user sees
@@ -33,9 +35,7 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   const ctx = useAppContext();
   ctx.auth = getAuth();
 
-  const [routineDay, setRoutineDay] = useState<String>(
-    defined_routines[0].name
-  );
+  const [routineDay, setRoutineDay] = useState<string[]>([]); // can have multiple routine days selected
 
   //onPress function for BigButton. Moves to Routine Screen.
   const bigButtonFunction = (): void => {
@@ -84,21 +84,16 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
       <BigButton key="big generate routines button" onPress={bigButtonFunction}>
         {"GENERATE!"}
       </BigButton>
-      <Picker
-        selectedValue={routineDay}
-        onValueChange={(itemValue, _) => setRoutineDay(itemValue)}
-        style={styles.day_picker}
-      >
-        {defined_routines.map((routine, index) => (
-          <Picker.Item
-            label={routine.name}
-            value={routine.name}
-            key={index}
-            color={defined_colors.white}
-            style={styles.day_picker}
-          />
-        ))}
-      </Picker>
+      <SectionedMultiSelect
+        items={items}
+        IconRenderer={Icon}
+        uniqueKey="id"
+        subKey="children"
+        selectText="SELECT A ROUTINE DAY"
+        showDropDowns={true}
+        onSelectedItemsChange={setRoutineDay}
+        selectedItems={routineDay}
+      />
     </SafeAreaView>
   );
 }
