@@ -32,7 +32,7 @@ const styles = StyleSheet.create<Styles>({
     borderWidth: 1,
   },
   time: {
-    fontSize: 48,
+    fontSize: 60,
     fontWeight: "bold",
     color: defined_colors.white,
   },

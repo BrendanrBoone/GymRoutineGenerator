@@ -37,14 +37,20 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   const [routineDay, setRoutineDay] = useState<string[]>([]); // can have multiple routine days selected
 
   //onPress function for BigButton. Moves to Routine Screen.
-  const bigButtonFunction = (): void => {
+  const bigButtonFunction = async (
+    selected_routine_day: string[]
+  ): Promise<void> => {
     functionLibrary.printLogScreen(route_names.GENERATE_SCREEN);
-    const err = ctx.generateRoutines(routineDay); // err is string
-    if (err) {
-      console.log("error log: ", err);
-      return;
+    try {
+      const err = await ctx.generateRoutines(selected_routine_day); // err is string
+      if (err) {
+        console.log("error log: ", err);
+        return;
+      }
+      props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
+    } catch (error) {
+      console.log("catch error: ", error);
     }
-    props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
   };
 
   const logoutButtonFunction = async () => {
@@ -80,7 +86,10 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
           </TouchableOpacity>
         </View>
       </View>
-      <BigButton key="big generate routines button" onPress={bigButtonFunction}>
+      <BigButton
+        key="big generate routines button"
+        onPress={() => bigButtonFunction(routineDay)}
+      >
         {"GENERATE!"}
       </BigButton>
       <SectionedMultiSelect
@@ -90,7 +99,6 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
         subKey="children"
         alwaysShowSelectText={true}
         showDropDowns={false}
-        animateDropDowns={false}
         selectText="good luck soldier"
         onSelectedItemsChange={setRoutineDay}
         selectedItems={routineDay}

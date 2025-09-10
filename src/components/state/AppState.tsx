@@ -45,12 +45,9 @@ export default function AppState(props: IAppState) {
   const [generated_exercises, setGeneratedExercises] = useState<IExerciseDoc[]>(
     []
   );
-  const [applicable_exercises, setApplicableExercises] = useState<
-    IExerciseDoc[]
-  >([]);
 
   const debug = async () => {
-    applicable_exercises.map((exercise: IExerciseDoc) => {
+    generated_exercises.map((exercise: IExerciseDoc) => {
       Object.entries(exercise).forEach(([key, value]) => {
         console.log(`${key}: ${value}`);
       });
@@ -78,36 +75,33 @@ export default function AppState(props: IAppState) {
       const q = query(exercisesCollection, where("userId", "==", user.uid));
       const data = await getDocs(q);
 
-      setApplicableExercises(
-        data.docs
-          .filter((doc) => {
-            const categories: string[] = doc.data().categories || [];
-            return categories.some((category) =>
-              routine_day.includes(category)
-            );
-          })
-          .map((doc) => {
-            const docData = doc.data();
-            return {
-              exerciseName: docData.exerciseName,
-              userId: docData.userId,
-              isCardio: docData.isCardio,
-              reps: docData.reps,
-              set: docData.set,
-              time: docData.time,
-              weight: docData.weight,
-              categories: docData.categories || [],
-              id: doc.id,
-            } as IExerciseDoc;
-          })
-      );
+      const filtered_exercises = data.docs
+        .filter((doc) => {
+          const categories: string[] = doc.data().categories || [];
+          return categories.some((category) => routine_day.includes(category));
+        })
+        .map((doc) => {
+          const docData = doc.data();
+          return {
+            exerciseName: docData.exerciseName,
+            userId: docData.userId,
+            isCardio: docData.isCardio,
+            reps: docData.reps,
+            set: docData.set,
+            time: docData.time,
+            weight: docData.weight,
+            categories: docData.categories || [],
+            id: doc.id,
+          } as IExerciseDoc;
+        });
 
-      if (applicable_exercises.length < 5) {
-        err = `Not enough exercises in selected categories (minimum 5, currently ${applicable_exercises.length})`;
+      if (filtered_exercises.length < 5) {
+        err = `Not enough exercises in selected categories (minimum 5, currently ${filtered_exercises.length})`;
       } else {
         // generate routine
-        const shuffledExercises = fisherYatesShuffle(applicable_exercises);
+        const shuffledExercises = fisherYatesShuffle(filtered_exercises);
         setGeneratedExercises(shuffledExercises.slice(0, 5));
+        await debug();
       }
     } else {
       err = "No user logged in";
