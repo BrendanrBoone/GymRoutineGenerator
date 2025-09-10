@@ -43,7 +43,7 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   const ctx = useAppContext();
 
   const [exerciseName, setExerciseName] = useState("");
-  const [isCardio, setIsCardio] = useState(false); // cardio is seperate from other categories because it can be changed asynchronously while the others are not
+  const [isCardio, setIsCardio] = useState(false); // determines whether exercise is trained by time or reps
   const [selected, setSelected] = useState<string[]>([]); // array of selected categories. gets mapped to correlating boolean states
 
   const user = ctx.auth.currentUser;
@@ -51,14 +51,6 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
 
   const addExercise = async () => {
     if (user) {
-      // map selected categories to boolean states
-      const isShoulder: boolean = selected.includes("Shoulders");
-      const isArms: boolean = selected.includes("Arms");
-      const isBack: boolean = selected.includes("Back");
-      const isChest: boolean = selected.includes("Chest");
-      const isCore: boolean = selected.includes("Core");
-      const isLegs: boolean = selected.includes("Legs");
-
       // add exercise document to firestore
       await addDoc(exercisesCollection, {
         exerciseName: exerciseName,
@@ -67,15 +59,8 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
         reps: 0,
         weight: 0,
         time: 0,
-        categories: {
-          isCardio: isCardio,
-          isShoulder: isShoulder,
-          isArm: isArms,
-          isBack: isBack,
-          isChest: isChest,
-          isCore: isCore,
-          isLegs: isLegs,
-        },
+        categories: selected,
+        isCardio: isCardio,
       });
       alert('Exercise "' + exerciseName + '" added');
     } else {

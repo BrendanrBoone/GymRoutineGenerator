@@ -6,7 +6,7 @@
  */
 import { ReactNode, createContext, useState } from "react";
 import utility from "../util/utility";
-import { RoutineFormat } from "./IRoutines";
+import { RoutineFormat, IExerciseDoc } from "./IRoutines";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
@@ -22,14 +22,16 @@ import {
 } from "firebase/firestore";
 
 type IAppContext = {
-  generated_routines: RoutineFormat;
+  debug: () => void;
+  generated_routines: IExerciseDoc[];
   generateRoutines: (routine_day: string[]) => void;
   auth: Auth;
   db: Firestore;
 };
 
 export const AppContext = createContext<IAppContext>({
-  generated_routines: utility.createEmptyRoutineObject(),
+  debug: () => {},
+  generated_routines: [],
   generateRoutines: () => {},
   auth: auth,
   db: db,
@@ -41,27 +43,81 @@ interface IAppState {
 
 export default function AppState(props: IAppState) {
   //initialize routines object
-  const [routines, setRoutines] = useState<RoutineFormat>(
-    utility.createEmptyRoutineObject()
+  const [generated_exercises, setGeneratedExercises] = useState<IExerciseDoc[]>(
+    []
   );
+  const [applicable_exercises, setApplicableExercises] = useState<
+    IExerciseDoc[]
+  >([]);
+
+  const debug = async () => {
+    applicable_exercises.map((exercise: IExerciseDoc) => {
+      Object.entries(exercise).forEach(([key, value]) => {
+        console.log(`${key}: ${value}`);
+      });
+    });
+  };
+
+  const fisherYatesShuffle = (array: string[]) => {
+    const shuffle = [...array];
+    for (let i = shuffle.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffle[i], shuffle[j]] = [shuffle[j], shuffle[i]];
+    }
+    return shuffle;
+  };
 
   //exported function to generate routines for user according to specified day
   // rng, sorting algorithm by weight, source of routines in day format
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
-  const generateRoutines = (routine_day: string[]) => {
+  const generateRoutines = async (routine_day: string[]) => {
+    let err = "";
     const user = auth.currentUser;
     const exercisesCollection = collection(db, "exercises");
     if (user) {
       const q = query(exercisesCollection, where("userId", "==", user.uid));
       const data = await getDocs(q);
+
+      setApplicableExercises(
+        data.docs
+          .filter((doc) => {
+            const categories: string[] = doc.data().categories || [];
+            return categories.some((category) =>
+              routine_day.includes(category)
+            );
+          })
+          .map((doc) => {
+            const docData = doc.data();
+            return {
+              exerciseName: docData.exerciseName,
+              userId: docData.userId,
+              isCardio: docData.isCardio,
+              reps: docData.reps,
+              set: docData.set,
+              time: docData.time,
+              weight: docData.weight,
+              categories: docData.categories || [],
+              id: doc.id,
+            } as IExerciseDoc;
+          })
+      );
+      if (applicable_exercises.length < 5) {
+        err = `Not enough exercises in selected categories (minimum 5, currently ${applicable_exercises.length})`;
+      } else {
+        // generate routine
+      }
+    } else {
+      err = "No user logged in";
     }
+    return err;
   };
 
   return (
     <AppContext.Provider
       value={{
-        generated_routines: routines,
+        debug: debug,
+        generated_routines: generated_exercises,
         generateRoutines: generateRoutines,
         auth: auth,
         db: db,
