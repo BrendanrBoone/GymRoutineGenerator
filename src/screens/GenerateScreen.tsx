@@ -12,7 +12,6 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { BigButton } from "../components/ui/BigButton";
 import route_names, { IGenerateScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
@@ -25,7 +24,7 @@ import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import { Icons } from "../components/util/icons";
 
 /**
- * The First Screen the user sees
+ * Main Configuration Screen
  *
  * @param props
  * @returns
@@ -40,7 +39,7 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   //onPress function for BigButton. Moves to Routine Screen.
   const bigButtonFunction = (): void => {
     functionLibrary.printLogScreen(route_names.GENERATE_SCREEN);
-    err = ctx.generateRoutines(routineDay); // err is string
+    const err = ctx.generateRoutines(routineDay); // err is string
     if (err) {
       console.log("error log: ", err);
       return;

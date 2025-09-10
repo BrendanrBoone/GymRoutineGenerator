@@ -5,8 +5,7 @@
  * can be viewed as ctx == AppState
  */
 import { ReactNode, createContext, useState } from "react";
-import utility from "../util/utility";
-import { RoutineFormat, IExerciseDoc } from "./IRoutines";
+import { IExerciseDoc } from "./IRoutines";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
@@ -24,7 +23,7 @@ import {
 type IAppContext = {
   debug: () => void;
   generated_routines: IExerciseDoc[];
-  generateRoutines: (routine_day: string[]) => void;
+  generateRoutines: (routine_day: string[]) => Promise<string>;
   auth: Auth;
   db: Firestore;
 };
@@ -32,7 +31,7 @@ type IAppContext = {
 export const AppContext = createContext<IAppContext>({
   debug: () => {},
   generated_routines: [],
-  generateRoutines: () => {},
+  generateRoutines: () => Promise.resolve(""),
   auth: auth,
   db: db,
 });
@@ -58,7 +57,7 @@ export default function AppState(props: IAppState) {
     });
   };
 
-  const fisherYatesShuffle = (array: string[]) => {
+  const fisherYatesShuffle = (array: any[]) => {
     const shuffle = [...array];
     for (let i = shuffle.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -102,10 +101,13 @@ export default function AppState(props: IAppState) {
             } as IExerciseDoc;
           })
       );
+
       if (applicable_exercises.length < 5) {
         err = `Not enough exercises in selected categories (minimum 5, currently ${applicable_exercises.length})`;
       } else {
         // generate routine
+        const shuffledExercises = fisherYatesShuffle(applicable_exercises);
+        setGeneratedExercises(shuffledExercises.slice(0, 5));
       }
     } else {
       err = "No user logged in";
