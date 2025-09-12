@@ -9,7 +9,10 @@ I want my own app to generate my various routines at the gym
 
 ### To do
 
+> RoutineScreenList
 > AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
+
+### General Guideline
 
 > context: routines generated
 > firebase: store number of sets, weight, number of attempts, \*account/name
