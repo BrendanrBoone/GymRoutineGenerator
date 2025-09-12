@@ -19,6 +19,7 @@ export const items = [
   {
     name: "Routine Days",
     id: 0,
+    disabled: true,
     children: [
       { name: "Shoudlers", id: 10 },
       { name: "Arms", id: 20 },

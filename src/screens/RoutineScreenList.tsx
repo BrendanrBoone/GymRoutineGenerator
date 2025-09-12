@@ -31,7 +31,13 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Routine Screen List</Text>
+      <Text
+        style={{
+          color: defined_colors.black,
+        }}
+      >
+        Routine Screen List
+      </Text>
     </SafeAreaView>
   );
 }
@@ -39,6 +45,8 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   p1Half: {
     flex: 1,

@@ -34,7 +34,7 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   const ctx = useAppContext();
   ctx.auth = getAuth();
 
-  const [routineDay, setRoutineDay] = useState<string[]>([]); // can have multiple routine days selected
+  const [selected, setSelected] = useState<string[]>([]); // list of names of muscle groups selected for routine
 
   //onPress function for BigButton. Moves to Routine Screen.
   const bigButtonFunction = async (
@@ -88,26 +88,23 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
       </View>
       <BigButton
         key="big generate routines button"
-        onPress={() => bigButtonFunction(routineDay)}
+        onPress={() => bigButtonFunction(selected)}
       >
         {"GENERATE!"}
       </BigButton>
       <SectionedMultiSelect
         items={items}
         IconRenderer={Icons.MaterialIcons as any}
-        uniqueKey="id"
+        uniqueKey="name"
         subKey="children"
         alwaysShowSelectText={true}
         showDropDowns={false}
         selectText="good luck soldier"
-        onSelectedItemsChange={(id) => {
-          console.log("selectedItem: ", id);
-          setRoutineDay((routineDay) => [
-            ...routineDay,
-            items.children.find((child) => child.id === id)?.name || "", // fix this
-          ]);
+        onSelectedItemsChange={(selectedItems) => {
+          setSelected(selectedItems);
+          console.log("selectedItems: ", selectedItems);
         }}
-        selectedItems={routineDay}
+        selectedItems={selected}
         styles={{
           selectToggle: {
             marginTop: "10%",
