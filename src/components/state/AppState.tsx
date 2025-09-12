@@ -68,6 +68,7 @@ export default function AppState(props: IAppState) {
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
   const generateRoutines = async (routine_day: string[]) => {
+    console.log("generating routines for day: ", routine_day);
     let err = "";
     const user = auth.currentUser;
     const exercisesCollection = collection(db, "exercises");

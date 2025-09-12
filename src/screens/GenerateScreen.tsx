@@ -100,7 +100,13 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
         alwaysShowSelectText={true}
         showDropDowns={false}
         selectText="good luck soldier"
-        onSelectedItemsChange={setRoutineDay}
+        onSelectedItemsChange={(id) => {
+          console.log("selectedItem: ", id);
+          setRoutineDay((routineDay) => [
+            ...routineDay,
+            items.children.find((child) => child.id === id)?.name || "", // fix this
+          ]);
+        }}
         selectedItems={routineDay}
         styles={{
           selectToggle: {
