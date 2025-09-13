@@ -41,8 +41,8 @@ import { StackScreenProps } from "@react-navigation/stack";
  */
 export type RootStackParamList = {
     [route_names.GENERATE_SCREEN]: undefined,
-    [route_names.ROUTINE_SCREEN_LIST]: undefined,
-    [route_names.ROUTINE_SCREEN_SLIDES]: undefined,
+    [route_names.ROUTINE_SCREEN_LIST]: {routine_day: string[]},
+    [route_names.ROUTINE_SCREEN_SLIDES]: {routine_day: string[]},
     [route_names.DETAILS_SCREEN]: {exercise: string},
     [route_names.SIGN_UP_SCREEN]: undefined,
     [route_names.LOGIN_SCREEN]: undefined,

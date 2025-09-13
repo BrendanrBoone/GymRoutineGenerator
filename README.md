@@ -5,12 +5,12 @@ I want my own app to generate my various routines at the gym
 ### Notes
 
 - implement expo-router after finishing screens and back-end functionality
-- renamed icon directory to app_icon. in case error pops up later
+- renamed icon directory to app_icon. check this in case error pops up later
 - maybe change firestore docs to allow exercises to be added globaly but weight/time preferences to be stored per user (ie "dictionary" within exercise)
 
 ### To do
 
-- RoutineScreenList
+- RoutineScreenList: adjust workout title for screen width
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 
 ### General Guideline

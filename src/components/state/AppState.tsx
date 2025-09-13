@@ -22,7 +22,7 @@ import {
 
 type IAppContext = {
   debug: () => void;
-  generated_routines: IExerciseDoc[];
+  generated_exercises: IExerciseDoc[];
   generateRoutines: (routine_day: string[]) => Promise<string>;
   auth: Auth;
   db: Firestore;
@@ -30,7 +30,7 @@ type IAppContext = {
 
 export const AppContext = createContext<IAppContext>({
   debug: () => {},
-  generated_routines: [],
+  generated_exercises: [],
   generateRoutines: () => Promise.resolve(""),
   auth: auth,
   db: db,
@@ -102,7 +102,6 @@ export default function AppState(props: IAppState) {
         // generate routine
         const shuffledExercises = fisherYatesShuffle(filtered_exercises);
         setGeneratedExercises(shuffledExercises.slice(0, 5));
-        await debug();
       }
     } else {
       err = "No user logged in";
@@ -114,7 +113,7 @@ export default function AppState(props: IAppState) {
     <AppContext.Provider
       value={{
         debug: debug,
-        generated_routines: generated_exercises,
+        generated_exercises: generated_exercises,
         generateRoutines: generateRoutines,
         auth: auth,
         db: db,

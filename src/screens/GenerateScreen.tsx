@@ -47,7 +47,9 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
         console.log("error log: ", err);
         return;
       }
-      props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST);
+      props.navigation.navigate(route_names.ROUTINE_SCREEN_LIST, {
+        routine_day: selected_routine_day,
+      });
     } catch (error) {
       console.log("catch error: ", error);
     }

@@ -25,57 +25,38 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   //provides player information
   const ctx = useAppContext();
 
-  //navigates to details screen
-  const goToDetails = (selected_exercise: string) => {
-    functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
-    props.navigation.navigate(route_names.DETAILS_SCREEN, {
-      exercise: selected_exercise,
-    });
-  };
+  const exercise = props.route.params.exercise;
 
-  return <SafeAreaView style={styles.container}></SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text
+          style={{
+            color: defined_colors.white,
+            fontSize: 40,
+          }}
+        >
+          {exercise}
+        </Text>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    backgroundColor: defined_colors.dark_grey,
   },
-  p1Half: {
-    flex: 1,
+  header: {
+    height: "10%",
+    width: "100%",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  p2Half: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  duelView: {
-    height: 250,
-    width: 185,
-    justifyContent: "center",
-    alignSelf: "center",
-    marginBottom: "63%",
-  },
-  win_dow: {
-    flex: 1,
-    maxHeight: 500,
-    marginVertical: "35%",
-    backgroundColor: "purple",
-    opacity: 0.8,
-    justifyContent: "center",
-  },
-  win_dow_flipped: {
-    flex: 1,
-    maxHeight: 500,
-    marginVertical: "35%",
-    backgroundColor: "purple",
-    opacity: 0.9,
-    justifyContent: "center",
-    transform: [{ rotate: "180deg" }],
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+    paddingLeft: 10,
   },
 });
