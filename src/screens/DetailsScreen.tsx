@@ -15,8 +15,8 @@ import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
 
 /**
- * Shows list of generated routines
- * routines can be selected to move to detail screen
+ * Shows details of exercise.
+ * Weight/time and the number of sets + reps
  *
  * @param props
  * @returns
@@ -39,6 +39,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
           {exercise}
         </Text>
       </View>
+      <View style={styles.first_container}></View>
     </SafeAreaView>
   );
 }
@@ -58,5 +59,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: defined_colors.white,
     paddingLeft: 10,
+  },
+  first_container: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: defined_colors.white,
   },
 });
