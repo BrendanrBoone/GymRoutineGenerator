@@ -13,6 +13,7 @@ import route_names, {
 import functionLibrary from "../components/state/ScrnDepFuncLib";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
+import { IExerciseDoc } from "../components/state/IRoutines";
 
 /**
  * Shows details of exercise.
@@ -25,7 +26,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   //provides player information
   const ctx = useAppContext();
 
-  const exercise = props.route.params.exercise;
+  const exercise: IExerciseDoc = props.route.params.exercise;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -36,10 +37,20 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
             fontSize: 40,
           }}
         >
-          {exercise}
+          {exercise.exerciseName}
         </Text>
       </View>
-      <View style={styles.first_container}></View>
+      <View style={styles.first_container}>
+        <Text
+          style={{ color: defined_colors.white, fontSize: 40 }}
+          numberOfLines={1}
+          adjustsFontSizeToFit={true}
+        >
+          {exercise.isCardio
+            ? exercise.time + " mins"
+            : exercise.weight + " lbs"}
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -64,5 +75,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: defined_colors.white,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

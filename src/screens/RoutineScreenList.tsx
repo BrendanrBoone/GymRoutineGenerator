@@ -18,6 +18,7 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
 import { Icons } from "../components/util/icons";
+import { IExerciseDoc } from "../components/state/IRoutines";
 
 /**
  * Shows list of generated routines
@@ -52,7 +53,7 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
   const routine_day = props.route.params.routine_day;
 
   //navigates to details screen
-  const goToDetails = (selected_exercise: string) => {
+  const goToDetails = (selected_exercise: IExerciseDoc) => {
     functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
     props.navigation.navigate(route_names.DETAILS_SCREEN, {
       exercise: selected_exercise,
@@ -97,7 +98,7 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
           >
             <Pressable
               key={"Pressable-" + exercise.exerciseName}
-              onPress={() => goToDetails(exercise.exerciseName)}
+              onPress={() => goToDetails(exercise)}
               style={({ pressed }) => [
                 styles.pressableItem,
                 pressed ? styles.pressedStyle : {},
