@@ -5,7 +5,7 @@
  * can be viewed as ctx == AppState
  */
 import { ReactNode, createContext, useState } from "react";
-import { IExerciseDoc } from "./IRoutines";
+import { IExerciseDoc } from "./IRoutine";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
@@ -88,7 +88,7 @@ export default function AppState(props: IAppState) {
             userId: docData.userId,
             isCardio: docData.isCardio,
             reps: docData.reps,
-            set: docData.set,
+            sets: docData.sets,
             time: docData.time,
             weight: docData.weight,
             categories: docData.categories || [],

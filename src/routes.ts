@@ -5,7 +5,7 @@
  * location of definitions for screen navigation and names
  */
 import { StackScreenProps } from "@react-navigation/stack";
-import { IExerciseDoc } from "./components/state/IRoutines";
+import { IExerciseDoc } from "./components/state/IRoutine";
 
 /**
  * Defines the parameters to a screen

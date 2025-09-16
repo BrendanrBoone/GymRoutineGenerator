@@ -1,5 +1,5 @@
 /**
- * IRoutines.ts
+ * IRoutine.ts
  * 
  * Defines routine list to be generated
  */
@@ -12,7 +12,7 @@ export interface IExerciseDoc {
     userId: string;
     isCardio: boolean;
     reps: number;
-    set: number;
+    sets: number;
     time: number;
     weight: number;
     categories: string[];

@@ -18,7 +18,7 @@ import functionLibrary from "../components/state/ScrnDepFuncLib";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
 import { Icons } from "../components/util/icons";
-import { IExerciseDoc } from "../components/state/IRoutines";
+import { IExerciseDoc } from "../components/state/IRoutine";
 
 /**
  * Shows list of generated routines

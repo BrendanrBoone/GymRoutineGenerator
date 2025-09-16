@@ -1,4 +1,4 @@
-import { RoutineFormat, IExerciseDoc } from "../state/IRoutines";
+import { RoutineFormat, IExerciseDoc } from "../state/IRoutine";
 
 const createEmptyRoutineObject = () => ({
     routine: []
