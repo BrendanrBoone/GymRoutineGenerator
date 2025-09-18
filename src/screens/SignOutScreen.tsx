@@ -5,6 +5,7 @@
  */
 
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { auth } from "../../FirebaseConfig";
 import route_names, { ISignOutScreenProps } from "../routes";
@@ -18,12 +19,12 @@ export default function SignOutScreen(props: ISignOutScreenProps) {
     }
   });
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sign Out?</Text>
       <TouchableOpacity style={styles.button} onPress={() => auth.signOut()}>
         <Text>Sign Out</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

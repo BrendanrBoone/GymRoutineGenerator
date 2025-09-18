@@ -5,14 +5,8 @@
  * Lists all generated routines
  */
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Modal,
-  Text,
-  Pressable,
-} from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import route_names, { IDetailsScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";

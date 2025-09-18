@@ -4,13 +4,8 @@
  * Sign-in Screen.
  */
 
-import {
-  TextInput,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { TextInput, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { auth } from "../../FirebaseConfig";
 import route_names, { ILoginScreenProps } from "../routes";

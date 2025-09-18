@@ -7,14 +7,13 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Pressable,
-  SafeAreaView,
   ViewStyle,
   TextStyle,
   Text,
   TouchableOpacity,
   TextInput,
-  View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import route_names, { IAddExerciseScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import { MultipleSelectList } from "react-native-dropdown-select-list";

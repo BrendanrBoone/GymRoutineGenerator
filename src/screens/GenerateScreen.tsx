@@ -7,11 +7,11 @@ import { useState } from "react";
 import {
   StyleSheet,
   View,
-  SafeAreaView,
   ViewStyle,
   Text,
   TouchableOpacity,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { BigButton } from "../components/ui/BigButton";
 import route_names, { IGenerateScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";

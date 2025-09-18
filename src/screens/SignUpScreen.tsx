@@ -4,13 +4,8 @@
  * Sign-up Screen.
  */
 
-import {
-  TextInput,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { TextInput, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useState } from "react";
 import { auth } from "../../FirebaseConfig";
 import route_names, { ISignUpScreenProps } from "../routes";
@@ -24,7 +19,7 @@ export default function SignUpScreen(props: ISignUpScreenProps) {
   const signUp = async () => {
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password);
-      if (user) props.navigation.navigate(route_names.HOME_SCREEN);
+      if (user) props.navigation.navigate(route_names.GENERATE_SCREEN);
     } catch (error: any) {
       console.log(error);
       alert("Sign in failed: " + error.message);
