@@ -4,13 +4,15 @@
  * Routine Screen component.
  * Lists all generated routines
  */
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import route_names, { IDetailsScreenProps } from "../routes";
+import Modal from "react-native-modal";
+import { IDetailsScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
 import { IExerciseDoc } from "../components/state/IRoutine";
+import { Icons } from "../components/util/icons";
 
 /**
  * Shows details of exercise.
@@ -25,11 +27,28 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
 
   const exercise: IExerciseDoc = props.route.params.exercise;
 
+  const [isAdjustorVisible, setIsAdjustorVisible] = useState(false); // visibility of adjustor modal
+  const [isSetRep, setIsSetRep] = useState(false); // determines whether set/rep is being adjusted for the modal
+  const [isWeight, setIsWeight] = useState(false);
+  const [isTime, setIsTime] = useState(false);
+
+  // CONVERSION FROM LBS TO KG IS 1 : 0,45359237
+
   const openAdjustor = () => {
     // darken background screen
+    // show modal
+    setIsAdjustorVisible(true);
     // pull up number
     // change number up or down (limit to not go below 0)
     // update number in ctx
+  };
+
+  const incrementIndicator = () => {
+    // increase the number shown in the indicator container
+  };
+
+  const decrementIndicator = () => {
+    // decrease the number shown in the indicator container
   };
 
   return (
@@ -93,6 +112,39 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
           </Pressable>
         </View>
       )}
+      <Modal
+        isVisible={isAdjustorVisible}
+        onBackButtonPress={() => setIsAdjustorVisible(false)}
+        style={styles.adjustor_container}
+      >
+        <View style={styles.indicator_container}>
+          <Text key="value indicator">INDICATION</Text>
+        </View>
+        <View style={styles.buttons_container}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.subtract_button,
+              pressed ? { backgroundColor: defined_colors.dark_red } : {},
+            ]}
+            onPress={() => incrementIndicator()}
+          >
+            <Icons.Feather
+              name="minus"
+              size={50}
+              color={defined_colors.white}
+            />
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.add_button,
+              pressed ? { backgroundColor: defined_colors.dark_red } : {},
+            ]}
+            onPress={() => decrementIndicator()}
+          >
+            <Icons.Feather name="plus" size={50} color={defined_colors.white} />
+          </Pressable>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -150,5 +202,33 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingLeft: 5,
+  },
+  adjustor_container: {
+    backgroundColor: defined_colors.duel_blue,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  indicator_container: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: defined_colors.dark_grey,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  buttons_container: {
+    width: "60%",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    backgroundColor: defined_colors.red,
+    borderRadius: 15,
+    transform: [{ scaleX: 4 }],
+  },
+  add_button: {
+    transform: [{ scaleX: 1 / 4 }],
+  },
+  subtract_button: {
+    transform: [{ scaleX: 1 / 4 }],
   },
 });
