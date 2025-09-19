@@ -5,7 +5,7 @@
  * Lists all generated routines
  */
 import { useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Modal from "react-native-modal";
 import { IDetailsScreenProps } from "../routes";
@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
     backgroundColor: defined_colors.dark_grey,
   },
   header: {
-    height: "10%",
     width: "100%",
     flexDirection: "row",
     alignItems: "center",

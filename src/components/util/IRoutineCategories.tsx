@@ -21,7 +21,7 @@ export const items = [
     id: 0,
     disabled: true,
     children: [
-      { name: "Shoudlers", id: 10 },
+      { name: "Shoulders", id: 10 },
       { name: "Arms", id: 20 },
       { name: "Back", id: 30 },
       { name: "Chest", id: 40 },
