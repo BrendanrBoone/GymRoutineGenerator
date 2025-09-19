@@ -18,18 +18,7 @@ import route_names, { IAddExerciseScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 import useAppContext from "../components/hooks/useAppContext";
-import { db } from "../../FirebaseConfig";
 import data from "../components/util/IRoutineCategories";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
 
 /**
  * Add Exercises to the Firebase Firestore Database
@@ -44,29 +33,6 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
   const [exerciseName, setExerciseName] = useState("");
   const [isCardio, setIsCardio] = useState(false); // determines whether exercise is trained by time or reps
   const [selected, setSelected] = useState<string[]>([]); // array of selected categories. gets mapped to correlating boolean states
-
-  const user = ctx.auth.currentUser;
-  const exercisesCollection = collection(db, "exercises");
-
-  const addExercise = async () => {
-    if (user) {
-      // add exercise document to firestore
-      await addDoc(exercisesCollection, {
-        exerciseName: exerciseName,
-        userId: user.uid,
-        sets: 0,
-        reps: 0,
-        weight: 0,
-        time: 0,
-        categories: selected,
-        isCardio: isCardio,
-      });
-      alert('Exercise "' + exerciseName + '" added');
-    } else {
-      alert("No user is signed in");
-    }
-    props.navigation.goBack();
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -100,7 +66,13 @@ export default function AddExerciseScreen(props: IAddExerciseScreenProps) {
         label="categories"
         boxStyles={{ width: "90%" }}
       />
-      <TouchableOpacity style={styles.button} onPress={addExercise}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          ctx.addExercise(exerciseName, selected, isCardio);
+          props.navigation.goBack();
+        }}
+      >
         <Text style={styles.text}>Add Exercise</Text>
       </TouchableOpacity>
     </SafeAreaView>

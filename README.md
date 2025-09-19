@@ -12,6 +12,7 @@ I want my own app to generate my various routines at the gym
 ### To do
 
 - RoutineScreenList: adjust workout title for screen width
+- RoutienScreenList: implement generating additional exercise and refresh exercise from db feature
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 
 ### General Guideline

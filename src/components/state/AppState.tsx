@@ -24,6 +24,11 @@ type IAppContext = {
   debug: () => void;
   generated_exercises: IExerciseDoc[];
   generateRoutines: (routine_day: string[]) => Promise<string>;
+  addExercise: (
+    exerciseName: string,
+    categories: string[],
+    isCardio: boolean
+  ) => void;
   auth: Auth;
   db: Firestore;
 };
@@ -32,6 +37,7 @@ export const AppContext = createContext<IAppContext>({
   debug: () => {},
   generated_exercises: [],
   generateRoutines: () => Promise.resolve(""),
+  addExercise: () => {},
   auth: auth,
   db: db,
 });
@@ -109,12 +115,39 @@ export default function AppState(props: IAppState) {
     return err;
   };
 
+  const addExercise = async (
+    exerciseName: string,
+    categories: string[],
+    isCardio: boolean
+  ) => {
+    const user = auth.currentUser;
+    const exercisesCollection = collection(db, "exercises");
+
+    if (user) {
+      // add exercise document to firestore
+      await addDoc(exercisesCollection, {
+        exerciseName: exerciseName,
+        userId: user.uid,
+        sets: 0,
+        reps: 0,
+        weight: 0,
+        time: 0,
+        categories: categories,
+        isCardio: isCardio,
+      });
+      alert('Exercise "' + exerciseName + '" added');
+    } else {
+      alert("No user is signed in");
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
         debug: debug,
         generated_exercises: generated_exercises,
         generateRoutines: generateRoutines,
+        addExercise: addExercise,
         auth: auth,
         db: db,
       }}

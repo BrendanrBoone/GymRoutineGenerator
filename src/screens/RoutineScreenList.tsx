@@ -78,7 +78,7 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
           {routine_day.join("/")}
         </Text>
       </View>
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }} alwaysBounceVertical={true}>
         {ctx.generated_exercises.map((exercise) => (
           <View
             key={"View-" + exercise.exerciseName}
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: defined_colors.dark_grey,
   },
   header: {
-    height: "10%",
+    height: 90,
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
