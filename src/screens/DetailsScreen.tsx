@@ -28,27 +28,78 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   const exercise: IExerciseDoc = props.route.params.exercise;
 
   const [isAdjustorVisible, setIsAdjustorVisible] = useState(false); // visibility of adjustor modal
-  const [isSetRep, setIsSetRep] = useState(false); // determines whether set/rep is being adjusted for the modal
-  const [isWeight, setIsWeight] = useState(false);
-  const [isTime, setIsTime] = useState(false);
+  const [adjustorValue, setAdjustorValue] = useState<number>(0); // value shown in adjustor modal
+  const [metric, setMetric] = useState<string>(""); // metric label for adjustor indicator
 
   // CONVERSION FROM LBS TO KG IS 1 : 0,45359237
 
-  const openAdjustor = () => {
+  const openAdjustor = (var_to_incr: string) => {
     // darken background screen
     // show modal
     setIsAdjustorVisible(true);
     // pull up number
-    // change number up or down (limit to not go below 0)
-    // update number in ctx
+    setMetric(var_to_incr);
+    switch (var_to_incr) {
+      case "lbs":
+        setAdjustorValue(exercise.weight);
+        break;
+      case "mins":
+        setAdjustorValue(exercise.time);
+        break;
+      case "sets":
+        setAdjustorValue(exercise.sets);
+        break;
+      case "reps":
+        setAdjustorValue(exercise.reps);
+        break;
+      default:
+        setAdjustorValue(0);
+        break;
+    }
   };
 
   const incrementIndicator = () => {
     // increase the number shown in the indicator container
+    if (metric === "lbs") {
+      setAdjustorValue(adjustorValue + 5);
+    } else {
+      setAdjustorValue(adjustorValue + 1);
+    }
   };
 
   const decrementIndicator = () => {
     // decrease the number shown in the indicator container
+    if (metric === "lbs") {
+      adjustorValue - 5 > 0
+        ? setAdjustorValue(adjustorValue - 5)
+        : setAdjustorValue(0);
+    } else {
+      adjustorValue - 1 > 0
+        ? setAdjustorValue(adjustorValue - 1)
+        : setAdjustorValue(0);
+    }
+  };
+
+  const applyChanges = () => {
+    switch (metric) {
+      case "lbs":
+        exercise.weight = adjustorValue;
+        break;
+      case "mins":
+        exercise.time = adjustorValue;
+        break;
+      case "sets":
+        exercise.sets = adjustorValue;
+        break;
+      case "reps":
+        exercise.reps = adjustorValue;
+        break;
+      default:
+        setAdjustorValue(0);
+        break;
+    }
+    setIsAdjustorVisible(false);
+    // update db and alert user
   };
 
   return (
@@ -68,7 +119,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
           styles.first_container,
           pressed ? { backgroundColor: defined_colors.light_grey } : {},
         ]}
-        onPress={() => openAdjustor()}
+        onPress={() => openAdjustor(exercise.isCardio ? "mins" : "lbs")}
       >
         <Text
           style={{ color: defined_colors.white, fontSize: 200 }}
@@ -92,7 +143,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
               styles.sets,
               pressed ? { backgroundColor: defined_colors.dark_blue } : {},
             ]}
-            onPress={() => openAdjustor()}
+            onPress={() => openAdjustor("sets")}
           >
             <Text style={{ color: defined_colors.white, fontSize: 40 }}>
               {exercise.sets}
@@ -104,7 +155,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
               styles.reps,
               pressed ? { backgroundColor: defined_colors.dark_red } : {},
             ]}
-            onPress={() => openAdjustor()}
+            onPress={() => openAdjustor("reps")}
           >
             <Text style={{ color: defined_colors.white, fontSize: 40 }}>
               {exercise.reps}
@@ -114,11 +165,14 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
       )}
       <Modal
         isVisible={isAdjustorVisible}
+        onBackdropPress={() => setIsAdjustorVisible(false)}
         onBackButtonPress={() => setIsAdjustorVisible(false)}
         style={styles.adjustor_container}
       >
         <View style={styles.indicator_container}>
-          <Text key="value indicator">INDICATION</Text>
+          <Text style={{ color: defined_colors.dark_grey, fontSize: 60 }}>
+            {adjustorValue + " " + metric}
+          </Text>
         </View>
         <View style={styles.buttons_container}>
           <Pressable
@@ -126,7 +180,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
               styles.subtract_button,
               pressed ? { backgroundColor: defined_colors.dark_red } : {},
             ]}
-            onPress={() => incrementIndicator()}
+            onPress={() => decrementIndicator()}
           >
             <Icons.Feather
               name="minus"
@@ -139,11 +193,27 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
               styles.add_button,
               pressed ? { backgroundColor: defined_colors.dark_red } : {},
             ]}
-            onPress={() => decrementIndicator()}
+            onPress={() => incrementIndicator()}
           >
             <Icons.Feather name="plus" size={50} color={defined_colors.white} />
           </Pressable>
         </View>
+        <Pressable
+          style={({ pressed }) => [
+            styles.confirm_button,
+            pressed ? { backgroundColor: defined_colors.dark_blue } : {},
+          ]}
+          onPress={applyChanges}
+        >
+          <Text
+            style={{
+              fontSize: 30,
+              color: defined_colors.black,
+            }}
+          >
+            Confirm
+          </Text>
+        </Pressable>
       </Modal>
     </SafeAreaView>
   );
@@ -204,31 +274,59 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   adjustor_container: {
-    backgroundColor: defined_colors.duel_blue,
     justifyContent: "center",
     alignItems: "center",
+    gap: 30,
+    height: 50,
   },
   indicator_container: {
     width: "100%",
+    height: "30%",
     borderWidth: 1,
-    borderColor: defined_colors.dark_grey,
+    borderColor: defined_colors.white,
+    borderRadius: 30,
+    backgroundColor: defined_colors.light_grey,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
   },
   buttons_container: {
     width: "60%",
+    height: 80,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: defined_colors.red,
-    borderRadius: 15,
-    transform: [{ scaleX: 4 }],
+    borderRadius: 40,
   },
   add_button: {
-    transform: [{ scaleX: 1 / 4 }],
+    height: "100%",
+    width: "48%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
   },
   subtract_button: {
-    transform: [{ scaleX: 1 / 4 }],
+    height: "100%",
+    width: "48%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+  },
+  confirm_button: {
+    backgroundColor: defined_colors.duel_blue,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+    borderRadius: 30,
+    height: 60,
+    width: "40%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 10,
   },
 });
