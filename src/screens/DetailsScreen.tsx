@@ -100,6 +100,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
     }
     setIsAdjustorVisible(false);
     // update db and alert user
+    ctx.updateExercise(exercise.id, metric, adjustorValue);
   };
 
   return (

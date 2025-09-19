@@ -29,6 +29,7 @@ type IAppContext = {
     categories: string[],
     isCardio: boolean
   ) => void;
+  updateExercise: (id: string, var_to_change: string, new_value: any) => void;
   auth: Auth;
   db: Firestore;
 };
@@ -38,6 +39,7 @@ export const AppContext = createContext<IAppContext>({
   generated_exercises: [],
   generateRoutines: () => Promise.resolve(""),
   addExercise: () => {},
+  updateExercise: () => {},
   auth: auth,
   db: db,
 });
@@ -51,6 +53,9 @@ export default function AppState(props: IAppState) {
   const [generated_exercises, setGeneratedExercises] = useState<IExerciseDoc[]>(
     []
   );
+
+  const user = auth.currentUser;
+  const exercisesCollection = collection(db, "exercises");
 
   const debug = async () => {
     generated_exercises.map((exercise: IExerciseDoc) => {
@@ -76,8 +81,6 @@ export default function AppState(props: IAppState) {
   const generateRoutines = async (routine_day: string[]) => {
     console.log("generating routines for day: ", routine_day);
     let err = "";
-    const user = auth.currentUser;
-    const exercisesCollection = collection(db, "exercises");
     if (user) {
       const q = query(exercisesCollection, where("userId", "==", user.uid));
       const data = await getDocs(q);
@@ -120,9 +123,6 @@ export default function AppState(props: IAppState) {
     categories: string[],
     isCardio: boolean
   ) => {
-    const user = auth.currentUser;
-    const exercisesCollection = collection(db, "exercises");
-
     if (user) {
       // add exercise document to firestore
       await addDoc(exercisesCollection, {
@@ -141,6 +141,32 @@ export default function AppState(props: IAppState) {
     }
   };
 
+  const updateExercise = async (
+    id: string,
+    var_to_change: string,
+    new_value: any
+  ) => {
+    const exerciseDoc = doc(db, "exercises", id);
+    switch (var_to_change) {
+      case "lbs":
+        await updateDoc(exerciseDoc, { weight: new_value });
+        break;
+      case "mins":
+        await updateDoc(exerciseDoc, { time: new_value });
+        break;
+      case "sets":
+        await updateDoc(exerciseDoc, { sets: new_value });
+        break;
+      case "reps":
+        await updateDoc(exerciseDoc, { reps: new_value });
+        break;
+      case "name":
+        await updateDoc(exerciseDoc, { exerciseName: new_value });
+        break;
+    }
+    alert("Exercise Data Updated");
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -148,6 +174,7 @@ export default function AppState(props: IAppState) {
         generated_exercises: generated_exercises,
         generateRoutines: generateRoutines,
         addExercise: addExercise,
+        updateExercise: updateExercise,
         auth: auth,
         db: db,
       }}
