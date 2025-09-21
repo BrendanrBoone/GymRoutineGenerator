@@ -13,6 +13,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
   updateDoc,
   deleteDoc,
   doc,
@@ -72,6 +73,16 @@ export default function AppState(props: IAppState) {
       [shuffle[i], shuffle[j]] = [shuffle[j], shuffle[i]];
     }
     return shuffle;
+  };
+
+  const checkExerciseExists = async (exerciseName: string) => {
+    try {
+      const exerciseDocToCheck = doc(db, "exercises", exerciseName);
+      const docSnapshot = await getDoc(exerciseDocToCheck);
+      return docSnapshot.exists();
+    } catch (err) {
+      console.error("Error checking if doc exists:", err);
+    }
   };
 
   //exported function to generate routines for user according to specified day
@@ -150,6 +161,7 @@ export default function AppState(props: IAppState) {
       } else {
         // generate routine
         const shuffledExercises = fisherYatesShuffle(filtered_exercises);
+        // initial order by weight then time
         setGeneratedExercises(shuffledExercises.slice(0, 5));
       }
     } else {
@@ -164,18 +176,18 @@ export default function AppState(props: IAppState) {
     isCardio: boolean
   ) => {
     if (user) {
-      // add exercise document to firestore
-      await addDoc(exercisesCollection, {
-        exerciseName: exerciseName,
-        userId: user.uid,
-        sets: 0,
-        reps: 0,
-        weight: 0,
-        time: 0,
-        categories: categories,
-        isCardio: isCardio,
-      });
-      alert('Exercise "' + exerciseName + '" added');
+      // check if db has exercise already
+      if (await checkExerciseExists(exerciseName)) {
+        alert('"' + exerciseName + '" is already stored in the database');
+      } else {
+        // add exercise document to firestore
+        await addDoc(exercisesCollection, {
+          exerciseName: exerciseName,
+          categories: categories,
+          isCardio: isCardio,
+        });
+        alert('Exercise "' + exerciseName + '" added');
+      }
     } else {
       alert("No user is signed in");
     }

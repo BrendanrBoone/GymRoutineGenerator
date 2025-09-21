@@ -9,12 +9,16 @@ export interface RoutineFormat {
 
 export interface IExerciseDoc {
     exerciseName: string;
-    userId: string;
     isCardio: boolean;
+    categories: string[];
+    id: string;
+}
+
+// Nested Collection Associated with Firestore Doc
+export interface IUserDoc {
+    userId: string;
     reps: number;
     sets: number;
     time: number;
     weight: number;
-    categories: string[];
-    id: string;
 }
