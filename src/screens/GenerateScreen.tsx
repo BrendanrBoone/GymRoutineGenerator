@@ -42,7 +42,7 @@ export default function GenerateScreen(props: IGenerateScreenProps) {
   ): Promise<void> => {
     functionLibrary.printLogScreen(route_names.GENERATE_SCREEN);
     try {
-      const err = await ctx.generateRoutines(selected_routine_day); // err is string
+      const err = await ctx.generateRoutine(selected_routine_day); // err is string
       if (err) {
         console.log("error log: ", err);
         return;

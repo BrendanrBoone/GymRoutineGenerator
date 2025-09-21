@@ -3,8 +3,16 @@
  * 
  * Defines routine list to be generated
  */
-export interface RoutineFormat {
-    routine: IExerciseDoc[];
+
+export interface IExercise {
+    exerciseName: string;
+    isCardio: boolean;
+    categories: string[];
+    userId: string;
+    reps: number;
+    sets: number;
+    time: number;
+    weight: number;
 }
 
 export interface IExerciseDoc {
@@ -22,4 +30,5 @@ export interface IUserDoc {
     sets: number;
     time: number;
     weight: number;
+    id: string;
 }

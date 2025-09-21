@@ -5,13 +5,12 @@
  * can be viewed as ctx == AppState
  */
 import { ReactNode, createContext, useState } from "react";
-import { IExerciseDoc } from "./IRoutine";
+import { IExercise, IExerciseDoc, IUserDoc } from "./IRoutine";
 import { auth, db } from "../../../FirebaseConfig";
 import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
 import {
   collection,
-  addDoc,
   getDocs,
   getDoc,
   setDoc,
@@ -20,11 +19,13 @@ import {
   doc,
   query,
   where,
+  DocumentReference,
+  DocumentData,
 } from "firebase/firestore";
 
 type IAppContext = {
   debug: () => void;
-  generated_exercises: IExerciseDoc[];
+  generated_exercises: IExercise[];
   generateRoutine: (routine_day: string[]) => Promise<string>;
   addExercise: (
     exerciseName: string,
@@ -52,14 +53,14 @@ interface IAppState {
 
 export default function AppState(props: IAppState) {
   //initialize routines object
-  const [generated_exercises, setGeneratedExercises] = useState<IExerciseDoc[]>(
+  const [generated_exercises, setGeneratedExercises] = useState<IExercise[]>(
     []
   );
 
   const exercisesCollection = collection(db, "exercises");
 
   const debug = async () => {
-    generated_exercises.map((exercise: IExerciseDoc) => {
+    generated_exercises.map((exercise: IExercise) => {
       Object.entries(exercise).forEach(([key, value]) => {
         console.log(`${key}: ${value}`);
       });
@@ -81,7 +82,20 @@ export default function AppState(props: IAppState) {
       const docSnapshot = await getDoc(exerciseDocToCheck);
       return docSnapshot.exists();
     } catch (err) {
-      console.error("Error checking if doc exists:", err);
+      console.error("Error checking if exercise doc exists:", err);
+    }
+  };
+
+  const checkUidExists = async (
+    exercise_doc: DocumentReference<DocumentData, DocumentData>,
+    userId: string
+  ) => {
+    try {
+      const uidDocToCheck = doc(exercise_doc, "userIds", userId);
+      const docSnapshot = await getDoc(uidDocToCheck);
+      return docSnapshot.exists();
+    } catch (err) {
+      console.error("Error checking if userId doc exists:", err);
     }
   };
 
@@ -99,7 +113,7 @@ export default function AppState(props: IAppState) {
         sets: 0,
         time: 0,
         weight: 0,
-      });
+      } as IUserDoc);
     } catch (err) {
       console.error("Error initializing subcollection:", err);
     }
@@ -114,27 +128,36 @@ export default function AppState(props: IAppState) {
     const user = auth.currentUser;
     let err = "";
     if (user) {
-      const q = query(exercisesCollection, where("userId", "==", user.uid));
+      const q = query(exercisesCollection);
       const data = await getDocs(q);
 
-      const filtered_exercises = data.docs
+      const filtered_exercises: Promise<IExercise>[] = data.docs
         .filter((doc) => {
           const categories: string[] = doc.data().categories || [];
           return categories.some((category) => routine_day.includes(category));
         })
-        .map((doc) => {
-          const docData = doc.data();
+        .map(async (document) => {
+          // needed to change var name to 'document' to avoid name-conflict with doc()
+          const exercise_doc_data = document.data();
+          if (!(await checkUidExists(document.ref, user.uid))) {
+            await initializeSubcollection(
+              exercise_doc_data.exerciseName,
+              user.uid
+            );
+          }
+          const uid_doc = doc(document.ref, "userIds", user.uid);
+          const uid_doc_snapshot = await getDoc(uid_doc);
+          const uid_doc_data: DocumentData = uid_doc_snapshot.data()!; // made sure the data is not undefined by initializing it prior
           return {
-            exerciseName: docData.exerciseName,
-            userId: docData.userId,
-            isCardio: docData.isCardio,
-            reps: docData.reps,
-            sets: docData.sets,
-            time: docData.time,
-            weight: docData.weight,
-            categories: docData.categories || [],
-            id: doc.id,
-          } as IExerciseDoc;
+            exerciseName: exercise_doc_data.exerciseName,
+            isCardio: exercise_doc_data.isCardio,
+            categories: exercise_doc_data.categories || [],
+            userId: uid_doc_data.userId,
+            reps: uid_doc_data.reps,
+            sets: uid_doc_data.sets,
+            time: uid_doc_data.time,
+            weight: uid_doc_data.weight,
+          } as IExercise;
         });
 
       if (filtered_exercises.length < 5) {
@@ -209,7 +232,7 @@ export default function AppState(props: IAppState) {
           exerciseName: exerciseName,
           categories: categories,
           isCardio: isCardio,
-        });
+        } as IExerciseDoc);
         // add initial subcollection of userIds with user for the document
         await initializeSubcollection(exerciseName, user.uid);
         alert('Exercise "' + exerciseName + '" added');
@@ -220,29 +243,33 @@ export default function AppState(props: IAppState) {
   };
 
   const updateExercise = async (
-    id: string,
+    exerciseName: string,
     var_to_change: string,
     new_value: any
   ) => {
-    const exerciseDoc = doc(db, "exercises", id);
-    switch (var_to_change) {
-      case "lbs":
-        await updateDoc(exerciseDoc, { weight: new_value });
-        break;
-      case "mins":
-        await updateDoc(exerciseDoc, { time: new_value });
-        break;
-      case "sets":
-        await updateDoc(exerciseDoc, { sets: new_value });
-        break;
-      case "reps":
-        await updateDoc(exerciseDoc, { reps: new_value });
-        break;
-      case "name":
-        await updateDoc(exerciseDoc, { exerciseName: new_value });
-        break;
+    const user = auth.currentUser;
+    if (user) {
+      const exercise_doc = doc(db, "exercises", exerciseName);
+      const userId_doc = doc(exercise_doc, "userIds", user.uid);
+      switch (var_to_change) {
+        case "lbs":
+          await updateDoc(userId_doc, { weight: new_value });
+          break;
+        case "mins":
+          await updateDoc(userId_doc, { time: new_value });
+          break;
+        case "sets":
+          await updateDoc(userId_doc, { sets: new_value });
+          break;
+        case "reps":
+          await updateDoc(userId_doc, { reps: new_value });
+          break;
+        case "name":
+          await updateDoc(exercise_doc, { exerciseName: new_value });
+          break;
+      }
+      alert("Exercise Data Updated");
     }
-    alert("Exercise Data Updated");
   };
 
   return (

@@ -11,7 +11,7 @@ import Modal from "react-native-modal";
 import { IDetailsScreenProps } from "../routes";
 import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
-import { IExerciseDoc } from "../components/state/IRoutine";
+import { IExercise } from "../components/state/IRoutine";
 import { Icons } from "../components/util/icons";
 
 /**
@@ -25,7 +25,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   //provides player information
   const ctx = useAppContext();
 
-  const exercise: IExerciseDoc = props.route.params.exercise;
+  const exercise: IExercise = props.route.params.exercise;
 
   const [isAdjustorVisible, setIsAdjustorVisible] = useState(false); // visibility of adjustor modal
   const [adjustorValue, setAdjustorValue] = useState<number>(0); // value shown in adjustor modal
@@ -101,7 +101,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
     }
     setIsAdjustorVisible(false);
     // update db and alert user
-    ctx.updateExercise(exercise.id, metric, adjustorValue);
+    ctx.updateExercise(exercise.exerciseName, metric, adjustorValue);
   };
 
   return (
@@ -116,7 +116,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
           value={name}
           onChangeText={setName}
           onSubmitEditing={() => {
-            ctx.updateExercise(exercise.id, "name", name);
+            ctx.updateExercise(exercise.exerciseName, "name", name);
           }}
         />
       </View>

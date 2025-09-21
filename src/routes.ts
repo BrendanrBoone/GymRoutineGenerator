@@ -5,7 +5,7 @@
  * location of definitions for screen navigation and names
  */
 import { StackScreenProps } from "@react-navigation/stack";
-import { IExerciseDoc } from "./components/state/IRoutine";
+import { IExercise } from "./components/state/IRoutine";
 
 /**
  * Defines the parameters to a screen
@@ -44,7 +44,7 @@ export type RootStackParamList = {
     [route_names.GENERATE_SCREEN]: undefined,
     [route_names.ROUTINE_SCREEN_LIST]: {routine_day: string[]},
     [route_names.ROUTINE_SCREEN_SLIDES]: {routine_day: string[]},
-    [route_names.DETAILS_SCREEN]: {exercise: IExerciseDoc},
+    [route_names.DETAILS_SCREEN]: {exercise: IExercise},
     [route_names.SIGN_UP_SCREEN]: undefined,
     [route_names.LOGIN_SCREEN]: undefined,
     [route_names.GENERATE_SCREEN]: undefined,
