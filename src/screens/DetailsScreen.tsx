@@ -5,7 +5,7 @@
  * Lists all generated routines
  */
 import { useState } from "react";
-import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Pressable, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Modal from "react-native-modal";
 import { IDetailsScreenProps } from "../routes";
@@ -30,6 +30,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   const [isAdjustorVisible, setIsAdjustorVisible] = useState(false); // visibility of adjustor modal
   const [adjustorValue, setAdjustorValue] = useState<number>(0); // value shown in adjustor modal
   const [metric, setMetric] = useState<string>(""); // metric label for adjustor indicator
+  const [name, setName] = useState<string>(exercise.exerciseName);
 
   // CONVERSION FROM LBS TO KG IS 1 : 0,45359237
 
@@ -106,14 +107,18 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text
+        <TextInput
           style={{
             color: defined_colors.white,
             fontSize: 40,
           }}
-        >
-          {exercise.exerciseName}
-        </Text>
+          placeholder={exercise.exerciseName}
+          value={name}
+          onChangeText={setName}
+          onSubmitEditing={() => {
+            ctx.updateExercise(exercise.id, "name", name);
+          }}
+        />
       </View>
       <Pressable
         style={({ pressed }) => [

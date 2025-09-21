@@ -23,7 +23,7 @@ import {
 type IAppContext = {
   debug: () => void;
   generated_exercises: IExerciseDoc[];
-  generateRoutines: (routine_day: string[]) => Promise<string>;
+  generateRoutine: (routine_day: string[]) => Promise<string>;
   addExercise: (
     exerciseName: string,
     categories: string[],
@@ -37,7 +37,7 @@ type IAppContext = {
 export const AppContext = createContext<IAppContext>({
   debug: () => {},
   generated_exercises: [],
-  generateRoutines: () => Promise.resolve(""),
+  generateRoutine: () => Promise.resolve(""),
   addExercise: () => {},
   updateExercise: () => {},
   auth: auth,
@@ -78,7 +78,7 @@ export default function AppState(props: IAppState) {
   // rng, sorting algorithm by weight, source of routines in day format
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
-  const generateRoutines = async (routine_day: string[]) => {
+  const generateRoutine = async (routine_day: string[]) => {
     console.log("generating routines for day: ", routine_day);
     let err = "";
     if (user) {
@@ -113,7 +113,47 @@ export default function AppState(props: IAppState) {
         setGeneratedExercises(shuffledExercises.slice(0, 5));
       }
     } else {
-      err = "No user logged in";
+      err = "No user logged in: " + String(auth.currentUser);
+    }
+    return err;
+  };
+
+  const generateRandomExercise = async (routine_day: string[]) => {
+    console.log("generating random exercise for day:", routine_day);
+    let err = "";
+    if (user) {
+      const q = query(exercisesCollection, where("userId", "==", user.uid));
+      const data = await getDocs(q);
+
+      const filtered_exercises = data.docs
+        .filter((doc) => {
+          const categories: string[] = doc.data().categories || [];
+          return categories.some((category) => routine_day.includes(category));
+        })
+        .map((doc) => {
+          const docData = doc.data();
+          return {
+            exerciseName: docData.exerciseName,
+            userId: docData.userId,
+            isCardio: docData.isCardio,
+            reps: docData.reps,
+            sets: docData.sets,
+            time: docData.time,
+            weight: docData.weight,
+            categories: docData.categories || [],
+            id: doc.id,
+          } as IExerciseDoc;
+        });
+
+      if (filtered_exercises.length < 5) {
+        err = `Not enough exercises in selected categories (minimum 5, currently ${filtered_exercises.length})`;
+      } else {
+        // generate routine
+        const shuffledExercises = fisherYatesShuffle(filtered_exercises);
+        setGeneratedExercises(shuffledExercises.slice(0, 5));
+      }
+    } else {
+      err = "No user logged in: " + String(auth.currentUser);
     }
     return err;
   };
@@ -172,7 +212,7 @@ export default function AppState(props: IAppState) {
       value={{
         debug: debug,
         generated_exercises: generated_exercises,
-        generateRoutines: generateRoutines,
+        generateRoutine: generateRoutine,
         addExercise: addExercise,
         updateExercise: updateExercise,
         auth: auth,
