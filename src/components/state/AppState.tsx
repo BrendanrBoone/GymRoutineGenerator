@@ -33,6 +33,7 @@ type IAppContext = {
     isCardio: boolean
   ) => void;
   updateExercise: (id: string, var_to_change: string, new_value: any) => void;
+  renameExercise: (old_name: string, new_name: string) => void;
   auth: Auth;
   db: Firestore;
 };
@@ -42,6 +43,7 @@ export const AppContext = createContext<IAppContext>({
   generateRoutine: () => Promise.resolve(""),
   addExercise: () => {},
   updateExercise: () => {},
+  renameExercise: () => {},
   auth: auth,
   db: db,
 });
@@ -270,39 +272,18 @@ export default function AppState(props: IAppState) {
     }
   };
 
-  const copySubcollections = async (
-    oldDocRef: DocumentReference,
-    newDocRef: DocumentReference
-  ): Promise<void> => {
-    try {
-      // Get all subcollections of the old document
-      const subcollections = await oldDocRef.listCollections();
-
-      for (const subcollection of subcollections) {
-        const subcollectionName = subcollection.id;
-        const querySnapshot = await getDocs(
-          collection(oldDocRef, subcollectionName)
-        );
-
-        // Use batch for better performance
-        const batch = writeBatch(db);
-
-        querySnapshot.forEach((docSnap) => {
-          const newSubDocRef = doc(newDocRef, subcollectionName, docSnap.id);
-          batch.set(newSubDocRef, docSnap.data());
-        });
-
-        await batch.commit();
-      }
-    } catch (error) {
-      console.error("Error copying subcollections:", error);
-      throw error;
-    }
-  };
-
   const renameExercise = async (old_name: string, new_name: string) => {
     const user = auth.currentUser;
     if (user) {
+      const old_doc_ref = doc(db, "exercises", old_name);
+      const old_doc_ss = await getDoc(old_doc_ref);
+      const new_doc_ref = doc(db, "exercises", new_name);
+      await setDoc(new_doc_ref, old_doc_ss.data());
+      await deleteDoc(old_doc_ref);
+      initializeSubcollection(new_name, user.uid);
+      alert(
+        "Renamed exercise and deleted previous preferences. Need to update"
+      );
     }
   };
 
@@ -313,6 +294,7 @@ export default function AppState(props: IAppState) {
         generateRoutine: generateRoutine,
         addExercise: addExercise,
         updateExercise: updateExercise,
+        renameExercise: renameExercise,
         auth: auth,
         db: db,
       }}

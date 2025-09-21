@@ -116,7 +116,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
           value={name}
           onChangeText={setName}
           onSubmitEditing={() => {
-            ctx.updateExercise(exercise.exerciseName, "name", name);
+            ctx.renameExercise(exercise.exerciseName, name);
           }}
         />
       </View>
@@ -217,7 +217,7 @@ export default function DetailsScreen(props: IDetailsScreenProps) {
               color: defined_colors.black,
             }}
           >
-            Confirm
+            Update
           </Text>
         </Pressable>
       </Modal>
