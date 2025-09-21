@@ -14,6 +14,7 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   doc,
@@ -55,7 +56,6 @@ export default function AppState(props: IAppState) {
     []
   );
 
-  const user = auth.currentUser;
   const exercisesCollection = collection(db, "exercises");
 
   const debug = async () => {
@@ -85,12 +85,33 @@ export default function AppState(props: IAppState) {
     }
   };
 
+  const initializeSubcollection = async (
+    exerciseName: string,
+    userId: string
+  ) => {
+    try {
+      const exercise_doc = doc(db, "exercises", exerciseName);
+      const userId_doc = doc(exercise_doc, "userIds", userId);
+      await setDoc(userId_doc, {
+        exerciseName: exerciseName,
+        userId: userId,
+        reps: 0,
+        sets: 0,
+        time: 0,
+        weight: 0,
+      });
+    } catch (err) {
+      console.error("Error initializing subcollection:", err);
+    }
+  };
+
   //exported function to generate routines for user according to specified day
   // rng, sorting algorithm by weight, source of routines in day format
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
   const generateRoutine = async (routine_day: string[]) => {
     console.log("generating routines for day: ", routine_day);
+    const user = auth.currentUser;
     let err = "";
     if (user) {
       const q = query(exercisesCollection, where("userId", "==", user.uid));
@@ -131,6 +152,7 @@ export default function AppState(props: IAppState) {
 
   const generateRandomExercise = async (routine_day: string[]) => {
     console.log("generating random exercise for day:", routine_day);
+    const user = auth.currentUser;
     let err = "";
     if (user) {
       const q = query(exercisesCollection, where("userId", "==", user.uid));
@@ -175,17 +197,21 @@ export default function AppState(props: IAppState) {
     categories: string[],
     isCardio: boolean
   ) => {
+    const user = auth.currentUser;
     if (user) {
       // check if db has exercise already
       if (await checkExerciseExists(exerciseName)) {
         alert('"' + exerciseName + '" is already stored in the database');
       } else {
         // add exercise document to firestore
-        await addDoc(exercisesCollection, {
+        const new_exercise_doc = doc(db, "exercises", exerciseName);
+        await setDoc(new_exercise_doc, {
           exerciseName: exerciseName,
           categories: categories,
           isCardio: isCardio,
         });
+        // add initial subcollection of userIds with user for the document
+        await initializeSubcollection(exerciseName, user.uid);
         alert('Exercise "' + exerciseName + '" added');
       }
     } else {

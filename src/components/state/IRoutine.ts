@@ -16,6 +16,7 @@ export interface IExerciseDoc {
 
 // Nested Collection Associated with Firestore Doc
 export interface IUserDoc {
+    exerciseName: string;
     userId: string;
     reps: number;
     sets: number;
