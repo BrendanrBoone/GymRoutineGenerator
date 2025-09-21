@@ -21,6 +21,7 @@ import {
   where,
   DocumentReference,
   DocumentData,
+  writeBatch,
 } from "firebase/firestore";
 
 type IAppContext = {
@@ -56,12 +57,6 @@ export default function AppState(props: IAppState) {
   );
 
   const exercisesCollection = collection(db, "exercises");
-
-  const debug = async (data: Object) => {
-    Object.entries(data).forEach(([key, value]) => {
-      console.log(`${key}: ${value}`);
-    });
-  };
 
   const fisherYatesShuffle = (array: any[]) => {
     const shuffle = [...array];
@@ -270,11 +265,44 @@ export default function AppState(props: IAppState) {
         case "reps":
           await updateDoc(userId_doc, { reps: new_value });
           break;
-        case "name":
-          await updateDoc(exercise_doc, { exerciseName: new_value });
-          break;
       }
       alert("Exercise Data Updated");
+    }
+  };
+
+  const copySubcollections = async (
+    oldDocRef: DocumentReference,
+    newDocRef: DocumentReference
+  ): Promise<void> => {
+    try {
+      // Get all subcollections of the old document
+      const subcollections = await oldDocRef.listCollections();
+
+      for (const subcollection of subcollections) {
+        const subcollectionName = subcollection.id;
+        const querySnapshot = await getDocs(
+          collection(oldDocRef, subcollectionName)
+        );
+
+        // Use batch for better performance
+        const batch = writeBatch(db);
+
+        querySnapshot.forEach((docSnap) => {
+          const newSubDocRef = doc(newDocRef, subcollectionName, docSnap.id);
+          batch.set(newSubDocRef, docSnap.data());
+        });
+
+        await batch.commit();
+      }
+    } catch (error) {
+      console.error("Error copying subcollections:", error);
+      throw error;
+    }
+  };
+
+  const renameExercise = async (old_name: string, new_name: string) => {
+    const user = auth.currentUser;
+    if (user) {
     }
   };
 
