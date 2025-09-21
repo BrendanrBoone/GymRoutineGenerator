@@ -24,7 +24,6 @@ import {
 } from "firebase/firestore";
 
 type IAppContext = {
-  debug: () => void;
   generated_exercises: IExercise[];
   generateRoutine: (routine_day: string[]) => Promise<string>;
   addExercise: (
@@ -38,7 +37,6 @@ type IAppContext = {
 };
 
 export const AppContext = createContext<IAppContext>({
-  debug: () => {},
   generated_exercises: [],
   generateRoutine: () => Promise.resolve(""),
   addExercise: () => {},
@@ -59,11 +57,9 @@ export default function AppState(props: IAppState) {
 
   const exercisesCollection = collection(db, "exercises");
 
-  const debug = async () => {
-    generated_exercises.map((exercise: IExercise) => {
-      Object.entries(exercise).forEach(([key, value]) => {
-        console.log(`${key}: ${value}`);
-      });
+  const debug = async (data: Object) => {
+    Object.entries(data).forEach(([key, value]) => {
+      console.log(`${key}: ${value}`);
     });
   };
 
@@ -127,31 +123,37 @@ export default function AppState(props: IAppState) {
     console.log("generating routines for day: ", routine_day);
     const user = auth.currentUser;
     let err = "";
-    if (user) {
-      const q = query(exercisesCollection);
-      const data = await getDocs(q);
 
-      const filtered_exercises: Promise<IExercise>[] = data.docs
-        .filter((doc) => {
+    try {
+      if (user) {
+        const q = query(exercisesCollection);
+        const data = await getDocs(q);
+
+        // exercise doc snapshots that match categories
+        const exer_cat_ss = data.docs.filter((doc) => {
           const categories: string[] = doc.data().categories || [];
           return categories.some((category) => routine_day.includes(category));
-        })
-        .map(async (document) => {
-          // needed to change var name to 'document' to avoid name-conflict with doc()
-          const exercise_doc_data = document.data();
-          if (!(await checkUidExists(document.ref, user.uid))) {
-            await initializeSubcollection(
-              exercise_doc_data.exerciseName,
-              user.uid
-            );
-          }
+        });
+
+        // map exercises with user preferences to IExercise[]
+        const routine = exer_cat_ss.map(async (document) => {
+          const doc_data: DocumentData = document.data();
+          let uid_doc_data: DocumentData;
+
           const uid_doc = doc(document.ref, "userIds", user.uid);
-          const uid_doc_snapshot = await getDoc(uid_doc);
-          const uid_doc_data: DocumentData = uid_doc_snapshot.data()!; // made sure the data is not undefined by initializing it prior
+          const uid_doc_ss = await getDoc(uid_doc);
+          if (!uid_doc_ss.exists()) {
+            await initializeSubcollection(doc_data.exerciseName, user.uid);
+            const new_uid_doc = doc(document.ref, "userIds", user.uid);
+            const new_uid_doc_ss = await getDoc(new_uid_doc);
+            uid_doc_data = new_uid_doc_ss.data()!;
+          } else {
+            uid_doc_data = uid_doc_ss.data();
+          }
           return {
-            exerciseName: exercise_doc_data.exerciseName,
-            isCardio: exercise_doc_data.isCardio,
-            categories: exercise_doc_data.categories || [],
+            exerciseName: doc_data.exerciseName,
+            isCardio: doc_data.isCardio,
+            categories: doc_data.categories || [],
             userId: uid_doc_data.userId,
             reps: uid_doc_data.reps,
             sets: uid_doc_data.sets,
@@ -160,15 +162,19 @@ export default function AppState(props: IAppState) {
           } as IExercise;
         });
 
-      if (filtered_exercises.length < 5) {
-        err = `Not enough exercises in selected categories (minimum 5, currently ${filtered_exercises.length})`;
+        const resolved_exercises: IExercise[] = await Promise.all(routine);
+        if (resolved_exercises.length < 5) {
+          err = `Not enough exercises in selected categories (minimum 5, currently ${resolved_exercises.length})`;
+        } else {
+          // generate routine
+          const shuffledExercises = fisherYatesShuffle(resolved_exercises);
+          setGeneratedExercises(shuffledExercises.slice(0, 5));
+        }
       } else {
-        // generate routine
-        const shuffledExercises = fisherYatesShuffle(filtered_exercises);
-        setGeneratedExercises(shuffledExercises.slice(0, 5));
+        err = "No user logged in: " + String(auth.currentUser);
       }
-    } else {
-      err = "No user logged in: " + String(auth.currentUser);
+    } catch (e) {
+      console.error("Error when generating exercises:" + e);
     }
     return err;
   };
@@ -275,7 +281,6 @@ export default function AppState(props: IAppState) {
   return (
     <AppContext.Provider
       value={{
-        debug: debug,
         generated_exercises: generated_exercises,
         generateRoutine: generateRoutine,
         addExercise: addExercise,
