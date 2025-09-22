@@ -56,6 +56,7 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
 
   const addRandomExercise = () => {
     functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
+    ctx.generateRandomExercise();
   };
 
   return (

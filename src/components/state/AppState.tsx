@@ -1,7 +1,7 @@
 /**
  * AppState.tsx
  *
- * tracks values within the app and allows updates them to the backend
+ * tracks core values on the front-end (IExercise) and contains all functions interacting with the back-end
  * can be viewed as ctx == AppState
  */
 import { ReactNode, createContext, useState } from "react";
@@ -21,12 +21,12 @@ import {
   where,
   DocumentReference,
   DocumentData,
-  writeBatch,
 } from "firebase/firestore";
 
 type IAppContext = {
   generated_exercises: IExercise[];
   generateRoutine: (routine_day: string[]) => Promise<string>;
+  generateRandomExercise: () => void;
   addExercise: (
     exerciseName: string,
     categories: string[],
@@ -41,6 +41,7 @@ type IAppContext = {
 export const AppContext = createContext<IAppContext>({
   generated_exercises: [],
   generateRoutine: () => Promise.resolve(""),
+  generateRandomExercise: () => {},
   addExercise: () => {},
   updateExercise: () => {},
   renameExercise: () => {},
@@ -57,6 +58,9 @@ export default function AppState(props: IAppState) {
   const [generated_exercises, setGeneratedExercises] = useState<IExercise[]>(
     []
   );
+  // maybe use index number for efficiency but this looks easier
+  const [unseen_exercises, setUnseenExercises] = useState<IExercise[]>([]);
+  const [seen_exercises, setSeenExercises] = useState<IExercise[]>([]);
 
   const exercisesCollection = collection(db, "exercises");
 
@@ -117,6 +121,8 @@ export default function AppState(props: IAppState) {
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
   const generateRoutine = async (routine_day: string[]) => {
+    setUnseenExercises([]);
+    setSeenExercises([]);
     console.log("generating routines for day: ", routine_day);
     const user = auth.currentUser;
     let err = "";
@@ -164,7 +170,9 @@ export default function AppState(props: IAppState) {
           err = `Not enough exercises in selected categories (minimum 5, currently ${resolved_exercises.length})`;
         } else {
           // generate routine
-          const shuffledExercises = fisherYatesShuffle(resolved_exercises);
+          const shuffledExercises: IExercise[] =
+            fisherYatesShuffle(resolved_exercises);
+          setUnseenExercises(shuffledExercises.slice(5));
           setGeneratedExercises(shuffledExercises.slice(0, 5));
         }
       } else {
@@ -176,46 +184,35 @@ export default function AppState(props: IAppState) {
     return err;
   };
 
-  const generateRandomExercise = async (routine_day: string[]) => {
-    console.log("generating random exercise for day:", routine_day);
-    const user = auth.currentUser;
-    let err = "";
-    if (user) {
-      const q = query(exercisesCollection, where("userId", "==", user.uid));
-      const data = await getDocs(q);
-
-      const filtered_exercises = data.docs
-        .filter((doc) => {
-          const categories: string[] = doc.data().categories || [];
-          return categories.some((category) => routine_day.includes(category));
-        })
-        .map((doc) => {
-          const docData = doc.data();
-          return {
-            exerciseName: docData.exerciseName,
-            userId: docData.userId,
-            isCardio: docData.isCardio,
-            reps: docData.reps,
-            sets: docData.sets,
-            time: docData.time,
-            weight: docData.weight,
-            categories: docData.categories || [],
-            id: doc.id,
-          } as IExerciseDoc;
-        });
-
-      if (filtered_exercises.length < 5) {
-        err = `Not enough exercises in selected categories (minimum 5, currently ${filtered_exercises.length})`;
-      } else {
-        // generate routine
-        const shuffledExercises = fisherYatesShuffle(filtered_exercises);
-        // initial order by weight then time
-        setGeneratedExercises(shuffledExercises.slice(0, 5));
+  const generateRandomExercise = async () => {
+    try {
+      if (unseen_exercises.length <= 0) {
+        alert("no more exercises of this category available in database");
+        return;
       }
-    } else {
-      err = "No user logged in: " + String(auth.currentUser);
+      console.log("generating one new exercise");
+      unseen_exercises.forEach((exercise: IExercise) => {
+        console.log("unseen_exercises: " + exercise.exerciseName);
+      });
+      const random_index = Math.floor(Math.random() * unseen_exercises.length);
+      const random_exercise: IExercise = unseen_exercises[random_index];
+      console.log("random exercise: " + random_exercise.exerciseName);
+      if (generated_exercises.includes(random_exercise)) {
+        console.error(
+          "random exercises is already in generated exercises for some reason"
+        );
+        return;
+      }
+      setGeneratedExercises([...generated_exercises, random_exercise]);
+      unseen_exercises.splice(random_index, 1);
+      setUnseenExercises([...unseen_exercises]);
+      setSeenExercises([...seen_exercises, random_exercise]);
+      seen_exercises.forEach((exercise: IExercise) => {
+        console.log("seen_exercises: " + exercise.exerciseName);
+      });
+    } catch (err) {
+      console.error("Error at generating random exercise:", err);
     }
-    return err;
   };
 
   const addExercise = async (
@@ -292,6 +289,7 @@ export default function AppState(props: IAppState) {
       value={{
         generated_exercises: generated_exercises,
         generateRoutine: generateRoutine,
+        generateRandomExercise: generateRandomExercise,
         addExercise: addExercise,
         updateExercise: updateExercise,
         renameExercise: renameExercise,

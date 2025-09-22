@@ -9,7 +9,7 @@ I want my own app to generate my various routines at the gym
 
 ### To do
 
-- RoutineScreenList: implement generating additional exercise and refresh exercise from db feature
+- RoutineScreenList: implement refresh exercise from db feature
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 - GenerateScreen: disable bigbutton unless categories are chosen
 
