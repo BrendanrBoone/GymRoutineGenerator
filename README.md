@@ -12,7 +12,6 @@ I want my own app to generate my various routines at the gym
 - RoutineScreenList: implement generating additional exercise and refresh exercise from db feature
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 - GenerateScreen: disable bigbutton unless categories are chosen
-- AppState: rename should check if there are any other exercises with the same name before confirming
 
 ### General Guideline
 
