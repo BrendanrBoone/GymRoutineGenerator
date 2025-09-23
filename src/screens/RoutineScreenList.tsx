@@ -13,6 +13,7 @@ import defined_colors from "../components/util/colors";
 import useAppContext from "../components/hooks/useAppContext";
 import { Icons } from "../components/util/icons";
 import { IExercise } from "../components/state/IRoutine";
+import Modal from "react-native-modal";
 
 /**
  * Shows list of generated routines
@@ -45,6 +46,9 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
   const ctx = useAppContext();
 
   const routine_day = props.route.params.routine_day;
+
+  const [isModalVisible, setIsModalVisiable] = useState(false);
+  const [long_pressed_i, setLongPressedI] = useState(0);
 
   //navigates to details screen
   const goToDetails = (selected_exercise: IExercise) => {
@@ -103,7 +107,8 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
               onPress={() => goToDetails(exercise)}
               onLongPress={() => {
                 console.log("long press detected");
-                refreshExercise(i);
+                setIsModalVisiable(true);
+                setLongPressedI(i);
               }}
               style={({ pressed }) => [
                 styles.pressableItem,
@@ -147,6 +152,51 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
           </Pressable>
         </View>
       </ScrollView>
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setIsModalVisiable(false)}
+        onBackButtonPress={() => setIsModalVisiable(false)}
+        style={styles.modal_container}
+      >
+        <Pressable
+          style={({ pressed }) => [
+            styles.refresh_button,
+            pressed ? { backgroundColor: defined_colors.light_grey } : {},
+          ]}
+          onPress={() => {
+            ctx.refreshExercise(long_pressed_i);
+            setIsModalVisiable(false);
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 30,
+              color: defined_colors.black,
+            }}
+          >
+            Refresh
+          </Text>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.remove_button,
+            pressed ? { backgroundColor: defined_colors.dark_red } : {},
+          ]}
+          onPress={() => {
+            ctx.removeExercise(long_pressed_i);
+            setIsModalVisiable(false);
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 30,
+              color: defined_colors.black,
+            }}
+          >
+            Remove
+          </Text>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -188,5 +238,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
+  },
+  modal_container: {
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 30,
+    height: 50,
+  },
+  refresh_button: {
+    backgroundColor: defined_colors.white,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+    borderRadius: 30,
+    height: 60,
+    width: "40%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  remove_button: {
+    backgroundColor: defined_colors.red,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+    borderRadius: 30,
+    height: 60,
+    width: "40%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
