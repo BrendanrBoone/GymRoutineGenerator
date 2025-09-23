@@ -61,13 +61,8 @@ export default function AppState(props: IAppState) {
   const [generated_exercises, setGeneratedExercises] = useState<IExercise[]>(
     []
   );
-  // maybe use index number for efficiency but this looks easier
-  const [unseen_exers_not_on_lst, setUnseenExersNotOnLst] = useState<
-    IExercise[]
-  >([]);
-  const [seen_exers_not_on_lst, setSeenExersNotOnLst] = useState<IExercise[]>(
-    []
-  );
+
+  const [other_cat_exers, setOtherCategExercises] = useState<IExercise[]>([]);
 
   const exercisesCollection = collection(db, "exercises");
 
@@ -128,8 +123,8 @@ export default function AppState(props: IAppState) {
   // returns error string
   // ex: "not enough exercises in category (minimum 5, currently [amount])"
   const generateRoutine = async (routine_day: string[]) => {
-    setUnseenExersNotOnLst([]);
-    setSeenExersNotOnLst([]);
+    setOtherCategExercises([]);
+
     console.log("generating routines for day: ", routine_day);
     const user = auth.currentUser;
     let err = "";
@@ -179,7 +174,7 @@ export default function AppState(props: IAppState) {
           // generate routine
           const shuffledExercises: IExercise[] =
             fisherYatesShuffle(resolved_exercises);
-          setUnseenExersNotOnLst(shuffledExercises.slice(5));
+          setOtherCategExercises(shuffledExercises.slice(5));
           setGeneratedExercises(shuffledExercises.slice(0, 5));
         }
       } else {
@@ -193,18 +188,19 @@ export default function AppState(props: IAppState) {
 
   const generateRandomExercise = async () => {
     try {
-      if (unseen_exers_not_on_lst.length <= 0) {
+      if (other_cat_exers.length <= 0) {
         alert("no more exercises of this category available in database");
         return;
       }
       console.log("generating one new exercise");
-      unseen_exers_not_on_lst.forEach((exercise: IExercise) => {
-        console.log("unseen_exercises: " + exercise.exerciseName);
+      other_cat_exers.forEach((exercise: IExercise) => {
+        console.log("off screen exercises: " + exercise.exerciseName);
       });
-      const random_index = Math.floor(
-        Math.random() * unseen_exers_not_on_lst.length
-      );
-      const random_exercise: IExercise = unseen_exers_not_on_lst[random_index];
+      const random_index = Math.floor(Math.random() * other_cat_exers.length);
+      const random_exercise: IExercise = other_cat_exers.splice(
+        random_index,
+        1
+      )[0];
       console.log("random exercise: " + random_exercise.exerciseName);
       if (generated_exercises.includes(random_exercise)) {
         console.error(
@@ -213,12 +209,7 @@ export default function AppState(props: IAppState) {
         return;
       }
       setGeneratedExercises([...generated_exercises, random_exercise]);
-      unseen_exers_not_on_lst.splice(random_index, 1);
-      setUnseenExersNotOnLst([...unseen_exers_not_on_lst]);
-      setSeenExersNotOnLst([...seen_exers_not_on_lst, random_exercise]);
-      seen_exers_not_on_lst.forEach((exercise: IExercise) => {
-        console.log("seen_exercises: " + exercise.exerciseName);
-      });
+      //setOtherCategExercises([...other_cat_exers]); //  don't know if I need this line??
     } catch (err) {
       console.error("Error at generating random exercise:", err);
     }
@@ -227,26 +218,23 @@ export default function AppState(props: IAppState) {
   const refreshExercise = async (indx: number) => {
     try {
       // edge case
-      if (unseen_exers_not_on_lst.length <= 0) {
-        console.log(
-          "no more unseen exercises. reseting seen exercises to unseen"
-        );
-        setUnseenExersNotOnLst([...seen_exers_not_on_lst]);
-        setSeenExersNotOnLst([]);
+      if (other_cat_exers.length <= 0) {
+        alert("no more exercises available for the selected categories");
         return;
       }
 
       // debug print statements
       console.log("refreshing exercise");
-      unseen_exers_not_on_lst.forEach((exercise: IExercise) => {
-        console.log("unseen_exers_not_on_lst: " + exercise.exerciseName);
+      other_cat_exers.forEach((exercise: IExercise) => {
+        console.log("off screen exercises: " + exercise.exerciseName);
       });
 
       // picking random exercise
-      const random_index = Math.floor(
-        Math.random() * unseen_exers_not_on_lst.length
-      );
-      const random_exercise: IExercise = unseen_exers_not_on_lst[random_index];
+      const random_index = Math.floor(Math.random() * other_cat_exers.length);
+      const random_exercise: IExercise = other_cat_exers.splice(
+        random_index,
+        1
+      )[0];
 
       console.log("random exercise: " + random_exercise.exerciseName);
 
@@ -261,19 +249,13 @@ export default function AppState(props: IAppState) {
       // replacing previous exercise with new one
       const updated_gen_exers = generated_exercises.map((exercise, i) => {
         if (i === indx) {
-          setSeenExersNotOnLst([...seen_exers_not_on_lst, exercise]);
+          setOtherCategExercises([...other_cat_exers, exercise]);
+          console.log("exercise taken out: " + exercise.exerciseName);
           return random_exercise;
         }
         return exercise;
       });
       setGeneratedExercises([...updated_gen_exers]);
-      unseen_exers_not_on_lst.splice(random_index, 1);
-      setUnseenExersNotOnLst([...unseen_exers_not_on_lst]);
-
-      // debug print statements
-      seen_exers_not_on_lst.forEach((exercise: IExercise) => {
-        console.log("seen_exercises: " + exercise.exerciseName);
-      });
     } catch (err) {
       console.error("Error at generating random exercise:", err);
     }
@@ -283,8 +265,9 @@ export default function AppState(props: IAppState) {
     try {
       const updated_gen_exers = [...generated_exercises];
       const removed_exercise = updated_gen_exers.splice(indx, 1)[0];
+      console.log("exercise taken out: " + removed_exercise.exerciseName);
       setGeneratedExercises([...updated_gen_exers]);
-      setSeenExersNotOnLst([...seen_exers_not_on_lst, removed_exercise]);
+      setOtherCategExercises([...other_cat_exers, removed_exercise]);
     } catch (err) {
       console.error("Error at removing of exercise:", err);
     }

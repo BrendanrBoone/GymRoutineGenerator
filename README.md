@@ -9,7 +9,7 @@ I want my own app to generate my various routines at the gym
 
 ### To do
 
-- RoutineScreenList: implement feature for user to reset unseen exercises
+- DetailsScreen: dynamic text fontSize when text begin to go off screen
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 - GenerateScreen: disable bigbutton unless categories are chosen
 
