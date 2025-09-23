@@ -59,6 +59,11 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
     ctx.generateRandomExercise();
   };
 
+  const refreshExercise = (indx: number) => {
+    functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
+    ctx.refreshExercise(indx);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -82,7 +87,7 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
         </View>
       </View>
       <ScrollView style={{ flex: 1 }} alwaysBounceVertical={true}>
-        {ctx.generated_exercises.map((exercise) => (
+        {ctx.generated_exercises.map((exercise, i) => (
           <View
             key={"View-" + exercise.exerciseName}
             style={{
@@ -96,6 +101,10 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
             <Pressable
               key={"Pressable-" + exercise.exerciseName}
               onPress={() => goToDetails(exercise)}
+              onLongPress={() => {
+                console.log("long press detected");
+                refreshExercise(i);
+              }}
               style={({ pressed }) => [
                 styles.pressableItem,
                 pressed ? styles.pressedStyle : {},

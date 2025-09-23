@@ -18,7 +18,6 @@ import {
   deleteDoc,
   doc,
   query,
-  where,
   DocumentReference,
   DocumentData,
 } from "firebase/firestore";
@@ -27,6 +26,7 @@ type IAppContext = {
   generated_exercises: IExercise[];
   generateRoutine: (routine_day: string[]) => Promise<string>;
   generateRandomExercise: () => void;
+  refreshExercise: (indx: number) => void;
   addExercise: (
     exerciseName: string,
     categories: string[],
@@ -42,6 +42,7 @@ export const AppContext = createContext<IAppContext>({
   generated_exercises: [],
   generateRoutine: () => Promise.resolve(""),
   generateRandomExercise: () => {},
+  refreshExercise: () => {},
   addExercise: () => {},
   updateExercise: () => {},
   renameExercise: () => {},
@@ -215,6 +216,44 @@ export default function AppState(props: IAppState) {
     }
   };
 
+  const refreshExercise = async (indx: number) => {
+    try {
+      if (unseen_exercises.length <= 0) {
+        alert("no more exercises of this category available in database");
+        return;
+      }
+      console.log("refreshing exercise");
+      unseen_exercises.forEach((exercise: IExercise) => {
+        console.log("unseen_exercises: " + exercise.exerciseName);
+      });
+      const random_index = Math.floor(Math.random() * unseen_exercises.length);
+      const random_exercise: IExercise = unseen_exercises[random_index];
+      console.log("random exercise: " + random_exercise.exerciseName);
+      if (generated_exercises.includes(random_exercise)) {
+        console.error(
+          "random exercises is already in generated exercises for some reason"
+        );
+        return;
+      }
+      const updated_gen_exers = generated_exercises.map((exercise, i) => {
+        if (i === indx) {
+          setSeenExercises([...seen_exercises, exercise]);
+          return random_exercise;
+        }
+        return exercise;
+      });
+      setGeneratedExercises([...updated_gen_exers]);
+      unseen_exercises.splice(random_index, 1);
+      setUnseenExercises([...unseen_exercises]);
+      setSeenExercises([...seen_exercises, random_exercise]);
+      seen_exercises.forEach((exercise: IExercise) => {
+        console.log("seen_exercises: " + exercise.exerciseName);
+      });
+    } catch (err) {
+      console.error("Error at generating random exercise:", err);
+    }
+  };
+
   const addExercise = async (
     exerciseName: string,
     categories: string[],
@@ -290,6 +329,7 @@ export default function AppState(props: IAppState) {
         generated_exercises: generated_exercises,
         generateRoutine: generateRoutine,
         generateRandomExercise: generateRandomExercise,
+        refreshExercise: refreshExercise,
         addExercise: addExercise,
         updateExercise: updateExercise,
         renameExercise: renameExercise,
