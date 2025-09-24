@@ -63,11 +63,6 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
     ctx.generateRandomExercise();
   };
 
-  const refreshExercise = (indx: number) => {
-    functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
-    ctx.refreshExercise(indx);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
