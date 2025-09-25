@@ -3,6 +3,8 @@
  *
  * Routine Screen component.
  * Lists all generated routines
+ *
+ * UNFINISHED
  */
 import { useState, useEffect, useRef, useCallback } from "react";
 import { StyleSheet, View, Modal, Text } from "react-native";
@@ -26,9 +28,6 @@ export default function RoutineScreenList(props: IRoutineScreenSlidesProps) {
   //navigates to details screen
   const goToDetails = (selected_exercise: string) => {
     functionLibrary.printLogScreen(route_names.ROUTINE_SCREEN_LIST);
-    props.navigation.navigate(route_names.DETAILS_SCREEN, {
-      exercise: selected_exercise,
-    });
   };
 
   return <SafeAreaView style={styles.container}></SafeAreaView>;
