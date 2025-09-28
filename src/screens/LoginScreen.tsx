@@ -27,6 +27,12 @@ export default function LoginScreen(props: ILoginScreenProps) {
   };
 
   const moveToSignUp = async () => {
+    alert(
+      "fb_api: " +
+        process.env.EXPO_PUBLIC_FIREBASE_API_KEY +
+        "\ntype: " +
+        typeof process.env.EXPO_PUBLIC_FIREBASE_API_KEY
+    );
     props.navigation.navigate(route_names.SIGN_UP_SCREEN);
   };
 
