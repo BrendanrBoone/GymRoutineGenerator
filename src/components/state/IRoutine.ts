@@ -13,6 +13,7 @@ export interface IExercise {
     sets: number;
     time: number;
     weight: number;
+    completed: boolean;
 }
 
 export interface IExerciseDoc {

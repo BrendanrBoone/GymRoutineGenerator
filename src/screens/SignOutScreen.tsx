@@ -4,13 +4,13 @@
  * SignOut Screen.
  */
 
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useState } from "react";
 import { auth } from "../../FirebaseConfig";
 import route_names, { ISignOutScreenProps } from "../routes";
 import { getAuth } from "firebase/auth";
 import defined_colors from "../components/util/colors";
+import useAppContext from "../components/hooks/useAppContext";
 
 export default function SignOutScreen(props: ISignOutScreenProps) {
   getAuth().onAuthStateChanged((user) => {
@@ -18,8 +18,13 @@ export default function SignOutScreen(props: ISignOutScreenProps) {
       props.navigation.replace(route_names.LOGIN_SCREEN);
     }
   });
+  const ctx = useAppContext();
+  const user = ctx.auth.currentUser;
+  const user_email = user ? user.email : "User not detected";
+
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>{user_email}</Text>
       <Text style={styles.title}>Sign Out?</Text>
       <TouchableOpacity style={styles.button} onPress={() => auth.signOut()}>
         <Text>Sign Out</Text>

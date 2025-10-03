@@ -42,7 +42,6 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
     return () => cancelAnimationFrame(animationId);
   }, []);
 
-  //provides player information
   const ctx = useAppContext();
 
   const routine_day = props.route.params.routine_day;
@@ -108,19 +107,34 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
               style={({ pressed }) => [
                 styles.pressableItem,
                 pressed ? styles.pressedStyle : {},
-                { borderColor: `rgb(${red}, ${green}, ${blue})` },
+                exercise.completed
+                  ? { borderColor: defined_colors.light_grey }
+                  : { borderColor: `rgb(${red}, ${green}, ${blue})` },
               ]}
             >
-              <Text
-                style={{
-                  color: defined_colors.white,
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                {exercise.exerciseName}
-              </Text>
+              {exercise.completed ? (
+                <Text
+                  style={{
+                    color: defined_colors.light_grey,
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  {exercise.exerciseName}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: defined_colors.white,
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  {exercise.exerciseName}
+                </Text>
+              )}
             </Pressable>
           </View>
         ))}
@@ -153,6 +167,26 @@ export default function RoutineScreenList(props: IRoutineScreenListProps) {
         onBackButtonPress={() => setIsModalVisiable(false)}
         style={styles.modal_container}
       >
+        <Pressable
+          style={({ pressed }) => [
+            styles.toggle_button,
+            pressed ? { backgroundColor: defined_colors.light_grey } : {},
+          ]}
+          onPress={() => {
+            const exercise = ctx.generated_exercises[long_pressed_i];
+            exercise.completed = !exercise.completed;
+            setIsModalVisiable(false);
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 30,
+              color: defined_colors.black,
+            }}
+          >
+            toggle complete
+          </Text>
+        </Pressable>
         <Pressable
           style={({ pressed }) => [
             styles.refresh_button,
@@ -239,6 +273,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 30,
     height: 50,
+  },
+  toggle_button: {
+    backgroundColor: defined_colors.light_grey,
+    borderWidth: 1,
+    borderColor: defined_colors.white,
+    borderRadius: 30,
+    height: 60,
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   refresh_button: {
     backgroundColor: defined_colors.white,

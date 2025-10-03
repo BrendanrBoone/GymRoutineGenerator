@@ -164,6 +164,7 @@ export default function AppState(props: IAppState) {
             sets: uid_doc_data.sets,
             time: uid_doc_data.time,
             weight: uid_doc_data.weight,
+            completed: false,
           } as IExercise;
         });
 
