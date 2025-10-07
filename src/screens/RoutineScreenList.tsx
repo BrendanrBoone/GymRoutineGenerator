@@ -5,7 +5,10 @@
  * Lists all generated routines
  */
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import route_names, { IRoutineScreenListProps } from "../routes";
 import functionLibrary from "../components/state/ScrnDepFuncLib";
