@@ -10,8 +10,9 @@ I want my own app to generate my various routines at the gym
 ### To do
 
 - DetailsScreen: dynamic text fontSize when text begin to go off screen
-- RoutineScreenList: local checking off completed exercises - fixing
+- RoutineScreenList:
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
+- AddExerciseScreen: Show list of all exercises in database
 - GenerateScreen: disable bigbutton unless categories are chosen
 - change expo env vars to be hidden - probably not fixable
 - FirebaseConfig: reactNativePersistence is not working - trying to browserLocalPersistence
