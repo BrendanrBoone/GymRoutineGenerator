@@ -13,7 +13,9 @@ I want my own app to generate my various routines at the gym
 - RoutineScreenList:
 - AddExerciseScreen: make filter for mistaken names to prevent bad additions to firestore
 - AddExerciseScreen: Show list of all exercises in database
+- AddExerciseScreen: change color of category text
 - GenerateScreen: disable bigbutton unless categories are chosen
+- GenerateScreen: make modal window of selector smaller
 - change expo env vars to be hidden - probably not fixable
 - FirebaseConfig: reactNativePersistence is not working - trying to browserLocalPersistence
 - finished build's top and bottom bar are still there and some colors aren't right. investigate differences between apk builds and expo go dev builds.
