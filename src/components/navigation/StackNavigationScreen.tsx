@@ -39,30 +39,37 @@ export default function StackNavigationScreen() {
       <RootStack.Screen
         name={route_names.SIGN_UP_SCREEN}
         component={SignUpScreen}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.SIGN_OUT_SCREEN}
         component={SignOutScreen}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.GENERATE_SCREEN}
         component={GenerateScreen}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.ADD_EXERCISE_SCREEN}
         component={AddExerciseScreen}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.ROUTINE_SCREEN_LIST}
         component={RoutineScreenList}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.ROUTINE_SCREEN_SLIDES}
         component={RoutineScreenSlides}
+        options={screen_options}
       />
       <RootStack.Screen
         name={route_names.DETAILS_SCREEN}
         component={DetailsScreen}
+        options={screen_options}
       />
     </RootStack.Navigator>
   );
